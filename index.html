@@ -94,7 +94,7 @@
     /* ─── NAVBAR ─── */
     .navbar {
       position: fixed;
-      top: 32px; left: 0; right: 0;
+      top: 0; left: 0; right: 0;
       z-index: 1000;
       padding: 0 2rem;
       height: 94px;
@@ -1280,7 +1280,7 @@
       .top-bar { height: 28px; padding: 0 1rem; }
       .top-bar-item span { font-size: .68rem; }
       .top-bar-items { gap: .9rem; }
-      .navbar { top: 28px; }
+      .navbar { top: 0; }
       section { padding: 4.5rem 1.2rem; }
       .stats { padding: 3.5rem 1.2rem; }
       .stats-inner { grid-template-columns: 1fr 1fr; }
@@ -1297,7 +1297,7 @@
 </head>
 <body>
 
-  <!-- ─── TOP BAR ─── -->
+  <!-- ─── TOP BAR (desactivado — descomenta para reactivar y pon .navbar { top: 32px } ) ───
   <div class="top-bar" id="topBar">
     <div class="top-bar-inner">
       <div class="top-bar-items">
@@ -1313,6 +1313,7 @@
       <div class="top-bar-left">Tu socio estratégico en gestión de fincas</div>
     </div>
   </div>
+  ─── fin TOP BAR desactivado ─── -->
 
   <!-- ─── NAVBAR ─── -->
   <nav class="navbar transparent" id="navbar">
