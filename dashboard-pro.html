@@ -1,0 +1,1126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Panel Profesional — Nexo Fincas</title>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Montserrat', sans-serif; background: #F0F4F8; color: #333; display: flex; min-height: 100vh; -webkit-font-smoothing: antialiased; }
+a { text-decoration: none; color: inherit; }
+
+/* ── SIDEBAR ── */
+.sidebar {
+  width: 240px; min-height: 100vh;
+  background: #1a1a2e;
+  display: flex; flex-direction: column;
+  position: fixed; top: 0; left: 0; bottom: 0;
+  z-index: 100;
+}
+.sidebar-logo {
+  padding: 28px 20px 24px;
+  border-bottom: 1px solid rgba(255,255,255,0.07);
+  display: flex; justify-content: center; align-items: center;
+}
+.sidebar-logo img { height: 72px; width: auto; }
+
+.sidebar-nav { padding: 16px 12px; flex: 1; display: flex; flex-direction: column; gap: 2px; overflow-y: auto; }
+.sidebar-nav::-webkit-scrollbar { width: 4px; }
+.sidebar-nav::-webkit-scrollbar-track { background: transparent; }
+.sidebar-nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.12); border-radius: 4px; }
+.nav-item {
+  display: flex; align-items: center; gap: 12px;
+  padding: 11px 14px; border-radius: 8px;
+  font-size: 13px; font-weight: 500;
+  color: rgba(255,255,255,0.55);
+  transition: background 0.2s, color 0.2s;
+  cursor: pointer; user-select: none;
+}
+.nav-item:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.9); }
+.nav-item.active { background: rgba(12,113,195,0.22); color: #2EA3F2; }
+.nav-item svg { width: 17px; height: 17px; flex-shrink: 0; }
+.nav-section {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.2em;
+  text-transform: uppercase; color: rgba(255,255,255,0.25);
+  padding: 16px 14px 6px;
+}
+
+.sidebar-user {
+  padding: 16px 20px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  display: flex; align-items: center; gap: 12px;
+}
+.user-avatar {
+  width: 36px; height: 36px; border-radius: 50%;
+  background: linear-gradient(135deg, #0C71C3, #2EA3F2);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; font-weight: 700; color: #fff; flex-shrink: 0;
+}
+.user-info { min-width: 0; }
+.user-name { font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.9); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.user-role { font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 1px; }
+
+/* ── MAIN ── */
+.main { margin-left: 240px; flex: 1; display: flex; flex-direction: column; min-height: 100vh; }
+
+/* Topbar */
+.topbar {
+  background: #fff; height: 64px;
+  padding: 0 32px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #E8EEF4;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar-title { font-size: 18px; font-weight: 700; color: #0C71C3; }
+.topbar-sub { font-size: 12px; color: #999; font-weight: 400; margin-left: 10px; }
+.topbar-right { display: flex; align-items: center; gap: 16px; }
+.topbar-date { font-size: 12px; color: #aaa; font-weight: 500; }
+.topbar-badge {
+  background: #E8F4FB; color: #0C71C3;
+  font-size: 11px; font-weight: 700;
+  padding: 5px 12px; border-radius: 100px;
+  letter-spacing: 0.06em;
+}
+.back-link {
+  font-size: 12px; font-weight: 600; color: #999;
+  display: flex; align-items: center; gap: 6px;
+  transition: color 0.2s;
+}
+.back-link:hover { color: #0C71C3; }
+
+/* ── View panels ── */
+.view-panel { display: none; padding: 28px 32px; flex: 1; }
+.view-panel.active { display: block; }
+
+/* ── View header ── */
+.view-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 24px;
+}
+.view-header-left h2 { font-size: 20px; font-weight: 700; color: #1a1a2e; }
+.view-header-left p  { font-size: 12px; color: #aaa; margin-top: 3px; }
+.btn-primary {
+  background: #0C71C3; color: #fff;
+  font-size: 12px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+  padding: 10px 20px; border-radius: 8px; border: none;
+  cursor: pointer; letter-spacing: 0.04em;
+  transition: background 0.2s;
+}
+.btn-primary:hover { background: #0a5fa3; }
+
+/* KPI grid */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.kpi-card {
+  background: #fff; border-radius: 12px;
+  padding: 20px 22px;
+  border: 1px solid #E8EEF4;
+  position: relative; overflow: hidden;
+  opacity: 0; transform: translateY(10px);
+  animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.kpi-card:nth-child(1) { animation-delay: 0.08s; }
+.kpi-card:nth-child(2) { animation-delay: 0.18s; }
+.kpi-card:nth-child(3) { animation-delay: 0.28s; }
+.kpi-card:nth-child(4) { animation-delay: 0.38s; }
+@keyframes fadeUp { to { opacity: 1; transform: translateY(0); } }
+.kpi-card::before {
+  content: '';
+  position: absolute; top: 0; left: 0; right: 0;
+  height: 3px;
+}
+.kpi-card.blue::before  { background: linear-gradient(to right, #0C71C3, #2EA3F2); }
+.kpi-card.gold::before  { background: linear-gradient(to right, #B07A3A, #DE9E55); }
+.kpi-card.green::before { background: linear-gradient(to right, #059669, #34d399); }
+.kpi-card.red::before   { background: linear-gradient(to right, #dc2626, #f87171); }
+
+.kpi-top { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 14px; }
+.kpi-icon { width: 38px; height: 38px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+.kpi-icon svg { width: 18px; height: 18px; }
+.kpi-card.blue  .kpi-icon { background: #E8F4FB; color: #0C71C3; }
+.kpi-card.gold  .kpi-icon { background: #FDF4E8; color: #DE9E55; }
+.kpi-card.green .kpi-icon { background: #ECFDF5; color: #059669; }
+.kpi-card.red   .kpi-icon { background: #FEF2F2; color: #dc2626; }
+
+.kpi-trend { font-size: 10px; font-weight: 700; padding: 3px 8px; border-radius: 100px; }
+.kpi-trend.up   { background: #ECFDF5; color: #059669; }
+.kpi-trend.down { background: #FEF2F2; color: #dc2626; }
+.kpi-trend.flat { background: #F3F4F6; color: #6B7280; }
+
+.kpi-value { font-size: 28px; font-weight: 800; color: #1a1a2e; letter-spacing: -0.02em; line-height: 1; }
+.kpi-label { font-size: 11px; font-weight: 500; color: #999; margin-top: 6px; letter-spacing: 0.04em; text-transform: uppercase; }
+
+/* Charts row */
+.charts-row {
+  display: grid;
+  grid-template-columns: 1fr 340px;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+.chart-card {
+  background: #fff; border-radius: 12px;
+  padding: 22px 24px;
+  border: 1px solid #E8EEF4;
+  opacity: 0; transform: translateY(10px);
+  animation: fadeUp 0.9s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.chart-card:first-child { animation-delay: 0.48s; }
+.chart-card:last-child  { animation-delay: 0.60s; }
+.chart-header {
+  display: flex; align-items: center; justify-content: space-between;
+  margin-bottom: 20px;
+}
+.chart-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.chart-sub { font-size: 11px; color: #aaa; font-weight: 400; margin-top: 2px; }
+.chart-pill {
+  font-size: 10px; font-weight: 700; letter-spacing: 0.1em;
+  text-transform: uppercase; padding: 4px 10px;
+  border-radius: 100px; background: #E8F4FB; color: #0C71C3;
+}
+.chart-wrap { position: relative; }
+.chart-wrap canvas { max-height: 200px; }
+.donut-wrap canvas { max-height: 200px; }
+
+.donut-legend { display: flex; flex-direction: column; gap: 10px; margin-top: 18px; }
+.legend-item { display: flex; align-items: center; justify-content: space-between; font-size: 12px; }
+.legend-left { display: flex; align-items: center; gap: 8px; }
+.legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+.legend-label { font-weight: 500; color: #555; }
+.legend-val { font-weight: 700; color: #1a1a2e; font-size: 13px; }
+
+/* Table shared */
+.table-card {
+  background: #fff; border-radius: 12px;
+  border: 1px solid #E8EEF4; overflow: hidden;
+}
+.table-card.animated {
+  opacity: 0; transform: translateY(10px);
+  animation: fadeUp 0.9s 0.72s cubic-bezier(0.16,1,0.3,1) forwards;
+}
+.table-header {
+  padding: 18px 24px;
+  display: flex; align-items: center; justify-content: space-between;
+  border-bottom: 1px solid #F0F4F8;
+}
+.table-title { font-size: 14px; font-weight: 700; color: #1a1a2e; }
+.table-action { font-size: 12px; font-weight: 600; color: #0C71C3; cursor: pointer; transition: opacity 0.2s; }
+.table-action:hover { opacity: 0.7; }
+
+table { width: 100%; border-collapse: collapse; }
+thead th {
+  padding: 10px 24px; text-align: left;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.14em; text-transform: uppercase;
+  color: #aaa; background: #FAFBFC;
+  border-bottom: 1px solid #F0F4F8;
+}
+tbody tr { border-bottom: 1px solid #F7F9FC; transition: background 0.15s; }
+tbody tr:last-child { border-bottom: none; }
+tbody tr:hover { background: #F8FAFC; }
+tbody td { padding: 13px 24px; font-size: 13px; font-weight: 500; color: #444; }
+.td-main { font-weight: 600; color: #1a1a2e; }
+.td-sub { font-size: 11px; font-weight: 400; color: #aaa; margin-top: 2px; }
+
+.status-pill {
+  display: inline-flex; align-items: center; gap: 5px;
+  font-size: 10px; font-weight: 700;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 4px 10px; border-radius: 100px;
+}
+.status-pill::before { content: ''; width: 5px; height: 5px; border-radius: 50%; }
+.status-pill.ok     { background: #ECFDF5; color: #059669; }
+.status-pill.ok::before { background: #059669; }
+.status-pill.warn   { background: #FFFBEB; color: #D97706; }
+.status-pill.warn::before { background: #D97706; }
+.status-pill.danger { background: #FEF2F2; color: #dc2626; }
+.status-pill.danger::before { background: #dc2626; }
+.status-pill.info   { background: #E8F4FB; color: #0C71C3; }
+.status-pill.info::before { background: #0C71C3; }
+.status-pill.purple { background: #F5F3FF; color: #7C3AED; }
+.status-pill.purple::before { background: #7C3AED; }
+
+.stars { color: #DE9E55; font-size: 12px; letter-spacing: 1px; }
+
+/* ── Filtros comunicación ── */
+.filter-bar {
+  background: #fff; border: 1px solid #E8EEF4; border-radius: 12px;
+  padding: 18px 24px; margin-bottom: 20px;
+  display: flex; align-items: flex-end; gap: 16px; flex-wrap: wrap;
+}
+.filter-group { display: flex; flex-direction: column; gap: 6px; flex: 1; min-width: 160px; }
+.filter-label { font-size: 10px; font-weight: 700; letter-spacing: 0.14em; text-transform: uppercase; color: #aaa; }
+.filter-control {
+  border: 1.5px solid #E8EEF4; border-radius: 8px;
+  padding: 9px 12px; font-size: 12px; font-weight: 500;
+  font-family: 'Montserrat', sans-serif; color: #333;
+  background: #FAFBFC; outline: none;
+  transition: border-color 0.2s;
+}
+.filter-control:focus { border-color: #0C71C3; background: #fff; }
+.recipients-badge {
+  background: #E8F4FB; border: 1.5px solid #BFDBFE;
+  border-radius: 10px; padding: 9px 18px;
+  display: flex; align-items: center; gap: 8px;
+  white-space: nowrap; flex-shrink: 0;
+}
+.recipients-count { font-size: 22px; font-weight: 800; color: #0C71C3; line-height: 1; }
+.recipients-label { font-size: 10px; font-weight: 600; color: #2EA3F2; text-transform: uppercase; letter-spacing: 0.1em; }
+
+/* ── Modal redactar ── */
+.compose-overlay {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(10,15,30,0.55); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.compose-overlay.open { opacity: 1; pointer-events: all; }
+.compose-box {
+  background: #fff; border-radius: 20px;
+  width: 680px; max-width: 95vw;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.18);
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+  font-family: 'Montserrat', sans-serif;
+}
+.compose-overlay.open .compose-box { transform: translateY(0); }
+.compose-head {
+  padding: 26px 32px 18px;
+  border-bottom: 1px solid #F0F4F8;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.compose-htitle { font-size: 17px; font-weight: 700; color: #1a1a2e; }
+.compose-hsub { font-size: 11px; color: #aaa; margin-top: 2px; }
+.compose-body { padding: 22px 32px; display: flex; flex-direction: column; gap: 16px; }
+.compose-to {
+  background: #F0F7FF; border: 1.5px solid #BFDBFE;
+  border-radius: 10px; padding: 12px 16px;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.compose-to-text { font-size: 13px; font-weight: 600; color: #0C71C3; }
+.compose-to-count { font-size: 12px; font-weight: 700; color: #fff; background: #0C71C3; padding: 3px 10px; border-radius: 100px; }
+.compose-foot {
+  padding: 18px 32px 26px;
+  border-top: 1px solid #F0F4F8;
+  display: flex; align-items: center; justify-content: space-between;
+}
+.compose-note { font-size: 11px; color: #aaa; }
+
+/* ── Modal incidencia ── */
+.modal-bg {
+  position: fixed; inset: 0; z-index: 500;
+  background: rgba(10,15,30,0.55); backdrop-filter: blur(6px);
+  display: flex; align-items: center; justify-content: center;
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.modal-bg.open { opacity: 1; pointer-events: all; }
+.modal-box {
+  background: #fff; border-radius: 20px;
+  width: 600px; max-width: 95vw;
+  box-shadow: 0 32px 80px rgba(0,0,0,0.18);
+  transform: translateY(20px);
+  transition: transform 0.3s cubic-bezier(0.16,1,0.3,1);
+  font-family: 'Montserrat', sans-serif;
+}
+.modal-bg.open .modal-box { transform: translateY(0); }
+.modal-head {
+  padding: 28px 32px 20px;
+  border-bottom: 1px solid #F0F4F8;
+  display: flex; align-items: flex-start; justify-content: space-between;
+}
+.modal-head-left { display: flex; align-items: center; gap: 14px; }
+.modal-icon {
+  width: 44px; height: 44px; border-radius: 12px;
+  background: #FEF2F2; color: #dc2626;
+  display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+}
+.modal-icon svg { width: 20px; height: 20px; }
+.modal-htitle { font-size: 17px; font-weight: 700; color: #1a1a2e; }
+.modal-hsub { font-size: 11px; color: #aaa; margin-top: 2px; }
+.modal-close-btn {
+  width: 32px; height: 32px; border-radius: 50%;
+  background: #F4F7FA; border: none; cursor: pointer;
+  font-size: 16px; color: #888;
+  display: flex; align-items: center; justify-content: center;
+  transition: background 0.2s; flex-shrink: 0;
+}
+.modal-close-btn:hover { background: #E0E8F0; color: #333; }
+.modal-body { padding: 24px 32px; display: flex; flex-direction: column; gap: 18px; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-group { display: flex; flex-direction: column; gap: 6px; }
+.form-group.full { grid-column: 1 / -1; }
+.form-label {
+  font-size: 11px; font-weight: 700; letter-spacing: 0.12em;
+  text-transform: uppercase; color: #888;
+}
+.form-control {
+  border: 1.5px solid #E8EEF4; border-radius: 10px;
+  padding: 11px 14px; font-size: 13px; font-weight: 500;
+  font-family: 'Montserrat', sans-serif; color: #333;
+  background: #FAFBFC; outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  width: 100%;
+}
+.form-control:focus { border-color: #0C71C3; box-shadow: 0 0 0 3px rgba(12,113,195,0.1); background: #fff; }
+textarea.form-control { resize: none; line-height: 1.5; }
+.modal-foot {
+  padding: 20px 32px 28px;
+  display: flex; align-items: center; justify-content: flex-end; gap: 12px;
+  border-top: 1px solid #F0F4F8;
+}
+.btn-cancel {
+  padding: 10px 22px; border-radius: 8px;
+  border: 1.5px solid #E8EEF4; background: #fff;
+  font-size: 12px; font-weight: 600; font-family: 'Montserrat', sans-serif;
+  color: #666; cursor: pointer; transition: background 0.2s;
+}
+.btn-cancel:hover { background: #F4F7FA; }
+.btn-save {
+  padding: 10px 24px; border-radius: 8px; border: none;
+  background: #0C71C3; color: #fff;
+  font-size: 12px; font-weight: 700; font-family: 'Montserrat', sans-serif;
+  cursor: pointer; transition: background 0.2s;
+  display: flex; align-items: center; gap: 8px;
+}
+.btn-save:hover { background: #0a5fa3; }
+.btn-save.saved { background: #059669; }
+
+/* toast */
+.toast {
+  position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
+  background: #1a1a2e; color: #fff; border-radius: 12px;
+  padding: 14px 24px; font-size: 13px; font-weight: 600;
+  display: flex; align-items: center; gap: 10px;
+  opacity: 0; pointer-events: none; z-index: 999;
+  transition: opacity 0.3s, transform 0.3s;
+}
+.toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+.toast-dot { width: 8px; height: 8px; border-radius: 50%; background: #059669; }
+</style>
+</head>
+<body>
+
+<!-- SIDEBAR -->
+<aside class="sidebar">
+  <div class="sidebar-logo">
+    <img src="uploads/logo.png" alt="Nexo Fincas">
+  </div>
+  <nav class="sidebar-nav">
+    <div class="nav-section">Principal</div>
+    <a class="nav-item active" data-view="dashboard" data-title="Dashboard" data-sub="Resumen general · Noviembre 2026">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg>
+      Dashboard
+    </a>
+    <a class="nav-item" data-view="comunidades" data-title="Comunidades" data-sub="24 comunidades gestionadas · A Coruña">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
+      Comunidades
+    </a>
+    <a class="nav-item" data-view="propietarios" data-title="Propietarios" data-sub="412 propietarios activos">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+      Propietarios
+    </a>
+    <div class="nav-section">Finanzas</div>
+    <a class="nav-item" data-view="contabilidad" data-title="Contabilidad" data-sub="Libro diario · Noviembre 2026">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+      Contabilidad
+    </a>
+    <a class="nav-item" data-view="cobros" data-title="Cobros y Remesas" data-sub="Gestión de remesas SEPA · Noviembre 2026">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
+      Cobros y Remesas
+    </a>
+    <div class="nav-section">Comunicación</div>
+    <a class="nav-item" data-view="comunicacion" data-title="Correos y Circulares" data-sub="Comunicación masiva a propietarios">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+      Correos y Circulares
+    </a>
+    <div class="nav-section">Operaciones</div>
+    <a class="nav-item" data-view="incidencias" data-title="Incidencias" data-sub="7 incidencias abiertas actualmente">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+      Incidencias
+    </a>
+    <a class="nav-item" data-view="proveedores" data-title="Proveedores" data-sub="38 proveedores registrados">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+      Proveedores
+    </a>
+    <a class="nav-item" data-view="documentacion" data-title="Documentación" data-sub="Archivo digital centralizado">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Documentación
+    </a>
+  </nav>
+  <div class="sidebar-user">
+    <div class="user-avatar">AC</div>
+    <div class="user-info">
+      <div class="user-name">Admin Coruña</div>
+      <div class="user-role">Administrador principal</div>
+    </div>
+  </div>
+</aside>
+
+<!-- MAIN -->
+<main class="main">
+  <div class="topbar">
+    <div style="display:flex;align-items:baseline;gap:8px;">
+      <span class="topbar-title" id="topbar-title">Dashboard</span>
+      <span class="topbar-sub" id="topbar-sub">Resumen general · Noviembre 2026</span>
+    </div>
+    <div class="topbar-right">
+      <span class="topbar-date">Delegación A Coruña</span>
+      <span class="topbar-badge">En línea</span>
+      <a href="landing.html" class="back-link">← Volver a la web</a>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: DASHBOARD ══ -->
+  <div id="view-dashboard" class="view-panel active">
+    <div class="kpi-grid">
+      <div class="kpi-card blue">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/></svg></div>
+          <span class="kpi-trend up">+3 ↑</span>
+        </div>
+        <div class="kpi-value">24</div>
+        <div class="kpi-label">Comunidades</div>
+      </div>
+      <div class="kpi-card gold">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg></div>
+          <span class="kpi-trend up">+8% ↑</span>
+        </div>
+        <div class="kpi-value">€48.240</div>
+        <div class="kpi-label">Facturación mensual</div>
+      </div>
+      <div class="kpi-card green">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg></div>
+          <span class="kpi-trend flat">= 412</span>
+        </div>
+        <div class="kpi-value">412</div>
+        <div class="kpi-label">Propietarios activos</div>
+      </div>
+      <div class="kpi-card red">
+        <div class="kpi-top">
+          <div class="kpi-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+          <span class="kpi-trend down">7 abiertas</span>
+        </div>
+        <div class="kpi-value">3</div>
+        <div class="kpi-label">Morosos activos</div>
+      </div>
+    </div>
+
+    <div class="charts-row">
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Facturación mensual</div>
+            <div class="chart-sub">Últimos 12 meses · €</div>
+          </div>
+          <span class="chart-pill">2026</span>
+        </div>
+        <div class="chart-wrap"><canvas id="chartLine"></canvas></div>
+      </div>
+      <div class="chart-card">
+        <div class="chart-header">
+          <div>
+            <div class="chart-title">Estado comunidades</div>
+            <div class="chart-sub">Distribución actual</div>
+          </div>
+        </div>
+        <div class="donut-wrap"><canvas id="chartDonut"></canvas></div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <div class="legend-left"><div class="legend-dot" style="background:#059669"></div><span class="legend-label">Al día</span></div>
+            <span class="legend-val">17</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-left"><div class="legend-dot" style="background:#D97706"></div><span class="legend-label">Con incidencia</span></div>
+            <span class="legend-val">4</span>
+          </div>
+          <div class="legend-item">
+            <div class="legend-left"><div class="legend-dot" style="background:#dc2626"></div><span class="legend-label">Morosidad</span></div>
+            <span class="legend-val">3</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-card animated">
+      <div class="table-header">
+        <div class="chart-title">Comunidades gestionadas</div>
+        <span class="table-action">Ver todas →</span>
+      </div>
+      <table>
+        <thead><tr><th>Comunidad</th><th>Propietarios</th><th>Cuota / mes</th><th>Estado</th><th>Última actividad</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-main">C/ Mayor 12</div><div class="td-sub">A Coruña, Galicia</div></td><td>24</td><td>€180</td><td><span class="status-pill ok">Al día</span></td><td>Hace 2 días</td></tr>
+          <tr><td><div class="td-main">Av. Galicia 5</div><div class="td-sub">Madrid, Centro</div></td><td>18</td><td>€220</td><td><span class="status-pill warn">Incidencia</span></td><td>Hoy, 10:42</td></tr>
+          <tr><td><div class="td-main">Plaza España 3</div><div class="td-sub">Madrid, Retiro</div></td><td>32</td><td>€195</td><td><span class="status-pill ok">Al día</span></td><td>Hace 1 semana</td></tr>
+          <tr><td><div class="td-main">C/ Colón 8</div><div class="td-sub">A Coruña, Ensanche</div></td><td>12</td><td>€150</td><td><span class="status-pill danger">Morosidad</span></td><td>Hace 3 días</td></tr>
+          <tr><td><div class="td-main">Av. América 22</div><div class="td-sub">Madrid, Salamanca</div></td><td>45</td><td>€210</td><td><span class="status-pill ok">Al día</span></td><td>Ayer, 16:15</td></tr>
+          <tr><td><div class="td-main">Brickell Key 14</div><div class="td-sub">Miami, Florida</div></td><td>28</td><td>$280</td><td><span class="status-pill ok">Al día</span></td><td>Hace 4 días</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: COMUNICACIÓN ══ -->
+  <div id="view-comunicacion" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Correos y Circulares</h2>
+        <p>Comunicación masiva a propietarios · Todas las comunidades</p>
+      </div>
+      <button class="btn-primary" id="btn-redactar">✉ Redactar circular</button>
+    </div>
+
+    <!-- Filtros + contador -->
+    <div class="filter-bar">
+      <div class="filter-group">
+        <span class="filter-label">Comunidad</span>
+        <select class="filter-control" id="filter-comunidad">
+          <option value="all">Todas las comunidades</option>
+          <option>C/ Mayor 12 — A Coruña</option>
+          <option>Av. Galicia 5 — Madrid</option>
+          <option>Plaza España 3 — Madrid</option>
+          <option>C/ Colón 8 — A Coruña</option>
+          <option>Av. América 22 — Madrid</option>
+          <option>Gran Vía 88 — Madrid</option>
+          <option>Brickell Key 14 — Miami</option>
+          <option>C/ Rosalía 7 — A Coruña</option>
+          <option>Av. Providencia 120 — Chile</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Destinatarios</span>
+        <select class="filter-control" id="filter-destinatarios">
+          <option value="412">Todos los propietarios</option>
+          <option value="8">Solo morosos</option>
+          <option value="34">Con incidencia activa</option>
+          <option value="198">Propietarios Madrid</option>
+          <option value="142">Propietarios A Coruña</option>
+          <option value="72">Propietarios Miami</option>
+        </select>
+      </div>
+      <div class="filter-group">
+        <span class="filter-label">Canal</span>
+        <select class="filter-control" id="filter-canal">
+          <option>Email</option>
+          <option>WhatsApp</option>
+          <option>Email + WhatsApp</option>
+        </select>
+      </div>
+      <div class="recipients-badge">
+        <div>
+          <div class="recipients-count" id="recipients-count">412</div>
+          <div class="recipients-label">destinatarios</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Historial -->
+    <div class="table-card">
+      <div class="table-header">
+        <div class="chart-title">Historial de envíos</div>
+        <span class="table-action">Exportar →</span>
+      </div>
+      <table>
+        <thead><tr><th>Asunto</th><th>Comunidades</th><th>Destinatarios</th><th>Canal</th><th>Enviado por</th><th>Fecha</th><th>Estado</th></tr></thead>
+        <tbody id="historial-body">
+          <tr><td><div class="td-main">Circular noviembre 2026 — Cuotas y novedades</div></td><td>Todas (10)</td><td>412</td><td>Email</td><td>Admin Coruña</td><td>01/11/2026</td><td><span class="status-pill ok">Enviado</span></td></tr>
+          <tr><td><div class="td-main">Aviso corte agua — C/ Mayor 12</div></td><td>C/ Mayor 12</td><td>24</td><td>Email + WhatsApp</td><td>Admin Coruña</td><td>28/10/2026</td><td><span class="status-pill ok">Enviado</span></td></tr>
+          <tr><td><div class="td-main">Convocatoria Junta Ordinaria — Plaza España 3</div></td><td>Plaza España 3</td><td>32</td><td>Email</td><td>Admin Madrid</td><td>15/10/2026</td><td><span class="status-pill ok">Enviado</span></td></tr>
+          <tr><td><div class="td-main">Recordatorio impago — Morosos octubre</div></td><td>Varias (4)</td><td>11</td><td>Email</td><td>Admin Coruña</td><td>10/10/2026</td><td><span class="status-pill ok">Enviado</span></td></tr>
+          <tr><td><div class="td-main">Obras fachada — Inicio semana del 20 oct.</div></td><td>Gran Vía 88</td><td>60</td><td>Email + WhatsApp</td><td>Admin Madrid</td><td>08/10/2026</td><td><span class="status-pill ok">Enviado</span></td></tr>
+          <tr><td><div class="td-main">Circular octubre 2026</div></td><td>Todas (10)</td><td>409</td><td>Email</td><td>Admin Coruña</td><td>01/10/2026</td><td><span class="status-pill ok">Enviado</span></td></tr>
+          <tr><td><div class="td-main">Prueba plantilla nueva — No enviar</div></td><td>C/ Colón 8</td><td>12</td><td>Email</td><td>Admin Coruña</td><td>29/09/2026</td><td><span class="status-pill warn">Borrador</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: COMUNIDADES ══ -->
+  <div id="view-comunidades" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Comunidades gestionadas</h2>
+        <p>24 comunidades · Delegación A Coruña</p>
+      </div>
+      <button class="btn-primary">+ Nueva comunidad</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Comunidad</th><th>Delegación</th><th>Propietarios</th><th>Cuota / mes</th><th>Síndico</th><th>Estado</th><th>Última actividad</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-main">C/ Mayor 12</div><div class="td-sub">A Coruña · ES</div></td><td>A Coruña</td><td>24</td><td>€180</td><td>Manuel Rodríguez</td><td><span class="status-pill ok">Al día</span></td><td>Hace 2 días</td></tr>
+          <tr><td><div class="td-main">Av. Galicia 5</div><div class="td-sub">Madrid · ES</div></td><td>Madrid</td><td>18</td><td>€220</td><td>Carmen López</td><td><span class="status-pill warn">Incidencia</span></td><td>Hoy, 10:42</td></tr>
+          <tr><td><div class="td-main">Plaza España 3</div><div class="td-sub">Madrid · ES</div></td><td>Madrid</td><td>32</td><td>€195</td><td>Antonio Vega</td><td><span class="status-pill ok">Al día</span></td><td>Hace 1 semana</td></tr>
+          <tr><td><div class="td-main">C/ Colón 8</div><div class="td-sub">A Coruña · ES</div></td><td>A Coruña</td><td>12</td><td>€150</td><td>Rosa Martínez</td><td><span class="status-pill danger">Morosidad</span></td><td>Hace 3 días</td></tr>
+          <tr><td><div class="td-main">Av. América 22</div><div class="td-sub">Madrid · ES</div></td><td>Madrid</td><td>45</td><td>€210</td><td>Jorge Fernández</td><td><span class="status-pill ok">Al día</span></td><td>Ayer, 16:15</td></tr>
+          <tr><td><div class="td-main">Brickell Key 14</div><div class="td-sub">Miami · US</div></td><td>Miami</td><td>28</td><td>$280</td><td>María Suárez</td><td><span class="status-pill ok">Al día</span></td><td>Hace 4 días</td></tr>
+          <tr><td><div class="td-main">C/ Rosalía 7</div><div class="td-sub">A Coruña · ES</div></td><td>A Coruña</td><td>16</td><td>€165</td><td>Luis Castro</td><td><span class="status-pill ok">Al día</span></td><td>Hace 5 días</td></tr>
+          <tr><td><div class="td-main">Gran Vía 88</div><div class="td-sub">Madrid · ES</div></td><td>Madrid</td><td>60</td><td>€240</td><td>Ana González</td><td><span class="status-pill warn">Incidencia</span></td><td>Hoy, 09:15</td></tr>
+          <tr><td><div class="td-main">Coral Gables 3</div><div class="td-sub">Miami · US</div></td><td>Miami</td><td>34</td><td>$320</td><td>Roberto Díaz</td><td><span class="status-pill ok">Al día</span></td><td>Hace 2 días</td></tr>
+          <tr><td><div class="td-main">Av. Providencia 120</div><div class="td-sub">Santiago · CL</div></td><td>Chile</td><td>22</td><td>$180.000</td><td>Felipe Morales</td><td><span class="status-pill info">Nueva</span></td><td>Hoy, 08:00</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: PROPIETARIOS ══ -->
+  <div id="view-propietarios" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Directorio de propietarios</h2>
+        <p>412 propietarios activos · Todas las comunidades</p>
+      </div>
+      <button class="btn-primary">+ Nuevo propietario</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Propietario</th><th>DNI / ID</th><th>Comunidad</th><th>Piso / Puerta</th><th>Cuota / mes</th><th>Estado</th><th>Último pago</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-main">Manuel Rodríguez García</div><div class="td-sub">manuel.rodriguez@email.com</div></td><td>12345678A</td><td>C/ Mayor 12</td><td>3º B</td><td>€180</td><td><span class="status-pill ok">Al corriente</span></td><td>01/11/2026</td></tr>
+          <tr><td><div class="td-main">Carmen López Vidal</div><div class="td-sub">carmen.lopez@email.com</div></td><td>87654321B</td><td>Av. Galicia 5</td><td>1º A</td><td>€220</td><td><span class="status-pill ok">Al corriente</span></td><td>01/11/2026</td></tr>
+          <tr><td><div class="td-main">Antonio Vega Soto</div><div class="td-sub">a.vega@email.com</div></td><td>11223344C</td><td>Plaza España 3</td><td>5º D</td><td>€195</td><td><span class="status-pill danger">Moroso</span></td><td>01/08/2026</td></tr>
+          <tr><td><div class="td-main">Rosa Martínez Pardo</div><div class="td-sub">rosa.martinez@email.com</div></td><td>44332211D</td><td>C/ Colón 8</td><td>2º C</td><td>€150</td><td><span class="status-pill danger">Moroso</span></td><td>01/07/2026</td></tr>
+          <tr><td><div class="td-main">Jorge Fernández Ruiz</div><div class="td-sub">j.fernandez@email.com</div></td><td>55667788E</td><td>Av. América 22</td><td>8º A</td><td>€210</td><td><span class="status-pill ok">Al corriente</span></td><td>01/11/2026</td></tr>
+          <tr><td><div class="td-main">María Suárez Blanco</div><div class="td-sub">m.suarez@email.com</div></td><td>99887766F</td><td>Brickell Key 14</td><td>12º B</td><td>$280</td><td><span class="status-pill ok">Al corriente</span></td><td>01/11/2026</td></tr>
+          <tr><td><div class="td-main">Luis Castro Novo</div><div class="td-sub">l.castro@email.com</div></td><td>22334455G</td><td>C/ Rosalía 7</td><td>4º A</td><td>€165</td><td><span class="status-pill warn">Aviso enviado</span></td><td>01/10/2026</td></tr>
+          <tr><td><div class="td-main">Ana González Peña</div><div class="td-sub">ana.gonzalez@email.com</div></td><td>66554433H</td><td>Gran Vía 88</td><td>10º C</td><td>€240</td><td><span class="status-pill ok">Al corriente</span></td><td>01/11/2026</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: CONTABILIDAD ══ -->
+  <div id="view-contabilidad" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Libro diario</h2>
+        <p>Noviembre 2026 · C/ Mayor 12, A Coruña</p>
+      </div>
+      <button class="btn-primary">+ Nuevo asiento</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Fecha</th><th>Nº Asiento</th><th>Concepto</th><th>Cuenta</th><th>Debe</th><th>Haber</th><th>Saldo</th></tr></thead>
+        <tbody>
+          <tr><td>01/11/2026</td><td>2026-1101</td><td>Cuotas ordinarias nov.</td><td>430 – Deudores</td><td style="color:#059669;font-weight:700">€4.320,00</td><td>—</td><td>€4.320,00</td></tr>
+          <tr><td>03/11/2026</td><td>2026-1102</td><td>Factura limpieza — Limpiezas Norte</td><td>623 – Servicios ext.</td><td>—</td><td style="color:#dc2626;font-weight:700">€840,00</td><td>€3.480,00</td></tr>
+          <tr><td>05/11/2026</td><td>2026-1103</td><td>Cobro remesa SEPA nov.</td><td>572 – Bancos</td><td style="color:#059669;font-weight:700">€3.960,00</td><td>—</td><td>€7.440,00</td></tr>
+          <tr><td>07/11/2026</td><td>2026-1104</td><td>Factura mantenimiento ascensor</td><td>622 – Reparaciones</td><td>—</td><td style="color:#dc2626;font-weight:700">€1.200,00</td><td>€6.240,00</td></tr>
+          <tr><td>10/11/2026</td><td>2026-1105</td><td>Seguro comunidad — Mapfre</td><td>625 – Seguros</td><td>—</td><td style="color:#dc2626;font-weight:700">€380,00</td><td>€5.860,00</td></tr>
+          <tr><td>12/11/2026</td><td>2026-1106</td><td>Recibo devuelto — A. Vega 5ºD</td><td>430 – Deudores</td><td>—</td><td style="color:#dc2626;font-weight:700">€195,00</td><td>€5.665,00</td></tr>
+          <tr><td>15/11/2026</td><td>2026-1107</td><td>Pago proveedor fontanería</td><td>572 – Bancos</td><td>—</td><td style="color:#dc2626;font-weight:700">€520,00</td><td>€5.145,00</td></tr>
+          <tr><td>18/11/2026</td><td>2026-1108</td><td>Recargo morosidad 2% — A. Vega</td><td>756 – Ingresos div.</td><td style="color:#059669;font-weight:700">€3,90</td><td>—</td><td>€5.148,90</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: COBROS Y REMESAS ══ -->
+  <div id="view-cobros" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Cobros y Remesas SEPA</h2>
+        <p>Gestión de adeudos directos · Noviembre 2026</p>
+      </div>
+      <button class="btn-primary">+ Nueva remesa</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Remesa</th><th>Fecha envío</th><th>Comunidad</th><th>Recibos</th><th>Total</th><th>Devueltos</th><th>Estado SEPA</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-main">REM-2026-1101</div></td><td>01/11/2026</td><td>C/ Mayor 12</td><td>24</td><td style="font-weight:700">€4.320,00</td><td><span style="color:#dc2626;font-weight:700">1</span></td><td><span class="status-pill ok">Procesada</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1102</div></td><td>01/11/2026</td><td>Av. Galicia 5</td><td>18</td><td style="font-weight:700">€3.960,00</td><td>0</td><td><span class="status-pill ok">Procesada</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1103</div></td><td>01/11/2026</td><td>Plaza España 3</td><td>32</td><td style="font-weight:700">€6.240,00</td><td><span style="color:#dc2626;font-weight:700">2</span></td><td><span class="status-pill warn">Devoluciones</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1104</div></td><td>01/11/2026</td><td>C/ Colón 8</td><td>12</td><td style="font-weight:700">€1.800,00</td><td><span style="color:#dc2626;font-weight:700">3</span></td><td><span class="status-pill danger">Impagados</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1105</div></td><td>01/11/2026</td><td>Av. América 22</td><td>45</td><td style="font-weight:700">€9.450,00</td><td>0</td><td><span class="status-pill ok">Procesada</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1106</div></td><td>03/11/2026</td><td>Brickell Key 14</td><td>28</td><td style="font-weight:700">$7.840,00</td><td>0</td><td><span class="status-pill ok">Procesada</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1107</div></td><td>05/11/2026</td><td>Gran Vía 88</td><td>60</td><td style="font-weight:700">€14.400,00</td><td><span style="color:#D97706;font-weight:700">1</span></td><td><span class="status-pill info">En banco</span></td></tr>
+          <tr><td><div class="td-main">REM-2026-1108</div></td><td>06/11/2026</td><td>C/ Rosalía 7</td><td>16</td><td style="font-weight:700">€2.640,00</td><td>0</td><td><span class="status-pill info">En banco</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: INCIDENCIAS ══ -->
+  <div id="view-incidencias" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Incidencias y averías</h2>
+        <p>7 abiertas · 3 en gestión · 2 resueltas este mes</p>
+      </div>
+      <button class="btn-primary">+ Nueva incidencia</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>ID</th><th>Comunidad</th><th>Descripción</th><th>Prioridad</th><th>Estado</th><th>Asignado a</th><th>Apertura</th></tr></thead>
+        <tbody>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0241</span></td><td>Av. Galicia 5</td><td><div class="td-main">Fuga agua portal 2</div><div class="td-sub">Zona: escalera B, planta baja</div></td><td><span class="status-pill danger">Alta</span></td><td><span class="status-pill info">En gestión</span></td><td>Fontanería Express</td><td>Hoy, 08:30</td></tr>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0240</span></td><td>Gran Vía 88</td><td><div class="td-main">Ascensor parado planta 7</div><div class="td-sub">Avería motor · Técnico pendiente</div></td><td><span class="status-pill danger">Alta</span></td><td><span class="status-pill warn">Presupuestada</span></td><td>Otis Elevadores</td><td>Ayer, 14:20</td></tr>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0239</span></td><td>C/ Mayor 12</td><td><div class="td-main">Iluminación pasillo 3ª planta</div><div class="td-sub">3 bombillas fundidas</div></td><td><span class="status-pill warn">Media</span></td><td><span class="status-pill info">En gestión</span></td><td>ElectroServ</td><td>Hace 2 días</td></tr>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0238</span></td><td>C/ Colón 8</td><td><div class="td-main">Puerta garaje no cierra</div><div class="td-sub">Motor del automatismo</div></td><td><span class="status-pill warn">Media</span></td><td><span class="status-pill purple">Abierta</span></td><td>Sin asignar</td><td>Hace 3 días</td></tr>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0237</span></td><td>Plaza España 3</td><td><div class="td-main">Grieta fachada exterior</div><div class="td-sub">Zona: lateral norte, 2ª planta</div></td><td><span class="status-pill danger">Alta</span></td><td><span class="status-pill warn">Presupuestada</span></td><td>Reformas Sur</td><td>Hace 4 días</td></tr>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0236</span></td><td>Av. América 22</td><td><div class="td-main">Jardín — riego automático</div><div class="td-sub">Programador averiado</div></td><td><span class="status-pill flat" style="background:#F3F4F6;color:#6B7280">Baja</span></td><td><span class="status-pill purple">Abierta</span></td><td>Sin asignar</td><td>Hace 5 días</td></tr>
+          <tr><td><span style="font-weight:700;color:#0C71C3">#INC-0235</span></td><td>C/ Rosalía 7</td><td><div class="td-main">Interfono portería no funciona</div><div class="td-sub">Bloque A, plantas 1-5</div></td><td><span class="status-pill warn">Media</span></td><td><span class="status-pill info">En gestión</span></td><td>TeleSistemas</td><td>Hace 6 días</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: PROVEEDORES ══ -->
+  <div id="view-proveedores" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Base de proveedores</h2>
+        <p>38 proveedores registrados · Activos en delegación</p>
+      </div>
+      <button class="btn-primary">+ Nuevo proveedor</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Empresa</th><th>Oficio</th><th>Teléfono</th><th>Comunidades activas</th><th>Valoración</th><th>Estado</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-main">Fontanería Express SL</div><div class="td-sub">fontaneria@express.es</div></td><td>Fontanería</td><td>981 234 567</td><td>8</td><td><span class="stars">★★★★★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+          <tr><td><div class="td-main">Otis Elevadores SA</div><div class="td-sub">otis.coruña@otis.com</div></td><td>Ascensores</td><td>981 345 678</td><td>12</td><td><span class="stars">★★★★</span><span style="color:#ddd">★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+          <tr><td><div class="td-main">ElectroServ Galicia</div><div class="td-sub">info@electroserv.es</div></td><td>Electricidad</td><td>981 456 789</td><td>6</td><td><span class="stars">★★★★★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+          <tr><td><div class="td-main">Limpiezas Norte SL</div><div class="td-sub">limpiezas@norte.es</div></td><td>Limpieza</td><td>981 567 890</td><td>15</td><td><span class="stars">★★★★</span><span style="color:#ddd">★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+          <tr><td><div class="td-main">Reformas Sur</div><div class="td-sub">reformas@sur.es</div></td><td>Obras y reformas</td><td>981 678 901</td><td>4</td><td><span class="stars">★★★</span><span style="color:#ddd">★★</span></td><td><span class="status-pill warn">En revisión</span></td></tr>
+          <tr><td><div class="td-main">Jardines & Zonas Verdes</div><div class="td-sub">jardines@gv.es</div></td><td>Jardinería</td><td>981 789 012</td><td>7</td><td><span class="stars">★★★★★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+          <tr><td><div class="td-main">TeleSistemas SA</div><div class="td-sub">soporte@telesistemas.es</div></td><td>Telefonía / Interfonos</td><td>981 890 123</td><td>9</td><td><span class="stars">★★★★</span><span style="color:#ddd">★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+          <tr><td><div class="td-main">Pintures Galicia SC</div><div class="td-sub">pintures@galicia.es</div></td><td>Pintura</td><td>981 901 234</td><td>3</td><td><span class="stars">★★★★★</span></td><td><span class="status-pill ok">Activo</span></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- ══ VIEW: DOCUMENTACIÓN ══ -->
+  <div id="view-documentacion" class="view-panel">
+    <div class="view-header">
+      <div class="view-header-left">
+        <h2>Archivo digital</h2>
+        <p>Documentación centralizada · Todas las comunidades</p>
+      </div>
+      <button class="btn-primary">+ Subir documento</button>
+    </div>
+    <div class="table-card">
+      <table>
+        <thead><tr><th>Documento</th><th>Tipo</th><th>Comunidad</th><th>Subido por</th><th>Fecha</th><th>Tamaño</th></tr></thead>
+        <tbody>
+          <tr><td><div class="td-main">Acta Junta Ordinaria Nov. 2026</div></td><td><span class="status-pill info">Acta</span></td><td>C/ Mayor 12</td><td>Admin Coruña</td><td>18/11/2026</td><td>248 KB</td></tr>
+          <tr><td><div class="td-main">Póliza Seguro Comunidad 2026</div></td><td><span class="status-pill ok">Seguro</span></td><td>Av. Galicia 5</td><td>Admin Coruña</td><td>01/01/2026</td><td>1,2 MB</td></tr>
+          <tr><td><div class="td-main">Contrato Mantenimiento Ascensor</div></td><td><span class="status-pill warn">Contrato</span></td><td>Gran Vía 88</td><td>Admin Madrid</td><td>15/03/2026</td><td>380 KB</td></tr>
+          <tr><td><div class="td-main">Certificado ITE 2025</div></td><td><span class="status-pill purple">Certificado</span></td><td>Plaza España 3</td><td>Admin Madrid</td><td>22/06/2025</td><td>2,1 MB</td></tr>
+          <tr><td><div class="td-main">Presupuesto Reforma Fachada</div></td><td><span class="status-pill warn">Presupuesto</span></td><td>Plaza España 3</td><td>Admin Madrid</td><td>10/11/2026</td><td>640 KB</td></tr>
+          <tr><td><div class="td-main">Acta Junta Extraordinaria Oct. 2026</div></td><td><span class="status-pill info">Acta</span></td><td>C/ Colón 8</td><td>Admin Coruña</td><td>28/10/2026</td><td>190 KB</td></tr>
+          <tr><td><div class="td-main">Escritura División Horizontal</div></td><td><span class="status-pill purple">Escritura</span></td><td>Av. América 22</td><td>Admin Madrid</td><td>12/04/2018</td><td>4,8 MB</td></tr>
+          <tr><td><div class="td-main">Contrato Limpieza 2026-2027</div></td><td><span class="status-pill warn">Contrato</span></td><td>Brickell Key 14</td><td>Admin Miami</td><td>01/09/2026</td><td>520 KB</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+</main>
+
+<!-- ── Modal: Redactar circular ── -->
+<div class="compose-overlay" id="compose-overlay">
+  <div class="compose-box">
+    <div class="compose-head">
+      <div>
+        <div class="compose-htitle">Redactar circular</div>
+        <div class="compose-hsub">El correo se enviará a los destinatarios del filtro activo</div>
+      </div>
+      <button class="modal-close-btn" id="compose-close">✕</button>
+    </div>
+    <div class="compose-body">
+      <div class="compose-to">
+        <span class="compose-to-text" id="compose-to-text">Para: Todos los propietarios — Todas las comunidades</span>
+        <span class="compose-to-count" id="compose-to-count">412 destinatarios</span>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Asunto</label>
+        <input type="text" class="form-control" id="compose-asunto" value="Circular noviembre 2026 — Nexo Fincas">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Mensaje</label>
+        <textarea class="form-control" rows="6" id="compose-mensaje">Estimado/a propietario/a,
+
+Le informamos de las novedades de este mes en su comunidad. Puede consultar el estado de su cuenta, recibos y actas en el Portal del Propietario.
+
+Para cualquier consulta, contacte con su administrador.
+
+Un saludo,
+Equipo Nexo Fincas</textarea>
+      </div>
+      <div style="display:flex;gap:12px;align-items:center">
+        <input type="checkbox" id="chk-whatsapp" style="width:16px;height:16px;accent-color:#0C71C3">
+        <label for="chk-whatsapp" style="font-size:12px;font-weight:600;color:#555;cursor:pointer">Enviar también por WhatsApp</label>
+      </div>
+    </div>
+    <div class="compose-foot">
+      <span class="compose-note">Se enviará desde notificaciones@nexofincas.com</span>
+      <div style="display:flex;gap:10px">
+        <button class="btn-cancel" id="compose-cancel">Cancelar</button>
+        <button class="btn-save" id="compose-send">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+          Enviar circular
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ── Modal: Nueva incidencia ── -->
+<div class="modal-bg" id="modal-incidencia">
+  <div class="modal-box">
+    <div class="modal-head">
+      <div class="modal-head-left">
+        <div class="modal-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </div>
+        <div>
+          <div class="modal-htitle">Nueva incidencia</div>
+          <div class="modal-hsub">Se notificará al proveedor automáticamente</div>
+        </div>
+      </div>
+      <button class="modal-close-btn" id="modal-close">✕</button>
+    </div>
+    <div class="modal-body">
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Comunidad</label>
+          <select class="form-control">
+            <option>C/ Mayor 12 — A Coruña</option>
+            <option selected>Av. Galicia 5 — Madrid</option>
+            <option>Plaza España 3 — Madrid</option>
+            <option>C/ Colón 8 — A Coruña</option>
+            <option>Av. América 22 — Madrid</option>
+            <option>Gran Vía 88 — Madrid</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Categoría</label>
+          <select class="form-control">
+            <option>Fontanería</option>
+            <option selected>Electricidad</option>
+            <option>Ascensores</option>
+            <option>Limpieza</option>
+            <option>Obras y reformas</option>
+            <option>Jardinería</option>
+            <option>Otro</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group full">
+        <label class="form-label">Descripción de la incidencia</label>
+        <textarea class="form-control" rows="3" placeholder="Describe el problema con el máximo detalle posible...">Fallo en el cuadro eléctrico del portal 1. Sin luz en escalera A, plantas 1 a 4. Vecinos afectados avisados.</textarea>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Prioridad</label>
+          <select class="form-control">
+            <option>Baja</option>
+            <option>Media</option>
+            <option selected>Alta</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Asignar proveedor</label>
+          <select class="form-control">
+            <option selected>ElectroServ Galicia</option>
+            <option>Fontanería Express SL</option>
+            <option>Otis Elevadores SA</option>
+            <option>TeleSistemas SA</option>
+            <option>Sin asignar</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Zona / Ubicación exacta</label>
+        <input type="text" class="form-control" value="Escalera A · Plantas 1–4 · Cuadro eléctrico portal">
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button class="btn-cancel" id="modal-cancel">Cancelar</button>
+      <button class="btn-save" id="modal-save">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+        Registrar incidencia
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Toast confirmación -->
+<div class="toast" id="toast">
+  <div class="toast-dot"></div>
+  Incidencia #INC-0242 registrada · Proveedor notificado
+</div>
+
+<script>
+// ── Comunicación: filtros y contador ──
+const filterComunidad     = document.getElementById('filter-comunidad');
+const filterDestinatarios = document.getElementById('filter-destinatarios');
+const recipientsCount     = document.getElementById('recipients-count');
+
+function updateCount() {
+  const sel = filterDestinatarios.options[filterDestinatarios.selectedIndex];
+  let count = parseInt(sel.value) || 412;
+  if (filterComunidad.value !== 'all') {
+    const map = { 'C/ Mayor 12 — A Coruña':24,'Av. Galicia 5 — Madrid':18,'Plaza España 3 — Madrid':32,'C/ Colón 8 — A Coruña':12,'Av. América 22 — Madrid':45,'Gran Vía 88 — Madrid':60,'Brickell Key 14 — Miami':28,'C/ Rosalía 7 — A Coruña':16,'Av. Providencia 120 — Chile':22 };
+    count = map[filterComunidad.value] || count;
+  }
+  recipientsCount.textContent = count;
+  document.getElementById('compose-to-count').textContent = count + ' destinatarios';
+  const dest = filterDestinatarios.options[filterDestinatarios.selectedIndex].text;
+  const com  = filterComunidad.value === 'all' ? 'Todas las comunidades' : filterComunidad.value;
+  document.getElementById('compose-to-text').textContent = 'Para: ' + dest + ' — ' + com;
+}
+filterComunidad.addEventListener('change', updateCount);
+filterDestinatarios.addEventListener('change', updateCount);
+
+// ── Modal redactar ──
+const composeOverlay = document.getElementById('compose-overlay');
+document.getElementById('btn-redactar').addEventListener('click', () => { updateCount(); composeOverlay.classList.add('open'); });
+function closeCompose() { composeOverlay.classList.remove('open'); }
+document.getElementById('compose-close').addEventListener('click', closeCompose);
+document.getElementById('compose-cancel').addEventListener('click', closeCompose);
+composeOverlay.addEventListener('click', e => { if (e.target === composeOverlay) closeCompose(); });
+
+document.getElementById('compose-send').addEventListener('click', () => {
+  const btn = document.getElementById('compose-send');
+  btn.classList.add('saved');
+  btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ¡Enviado!';
+  setTimeout(() => {
+    closeCompose();
+    btn.classList.remove('saved');
+    btn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg> Enviar circular';
+    // Insertar fila en historial
+    const asunto = document.getElementById('compose-asunto').value;
+    const count  = recipientsCount.textContent;
+    const com    = filterComunidad.value === 'all' ? 'Todas (10)' : filterComunidad.value.split('—')[0].trim();
+    const today  = new Date().toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'});
+    const row = document.createElement('tr');
+    row.innerHTML = `<td><div class="td-main">${asunto}</div></td><td>${com}</td><td>${count}</td><td>Email</td><td>Admin Coruña</td><td>${today}</td><td><span class="status-pill ok">Enviado</span></td>`;
+    row.style.background = '#F0FDF4';
+    document.getElementById('historial-body').prepend(row);
+    setTimeout(() => { row.style.transition = 'background 1s'; row.style.background = ''; }, 100);
+    toast.textContent = '';
+    toast.innerHTML = '<div class="toast-dot"></div> Circular enviada a ' + count + ' propietarios';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }, 900);
+});
+
+// ── Modal incidencia ──
+const modalBg  = document.getElementById('modal-incidencia');
+const saveBtn  = document.getElementById('modal-save');
+const closeBtn = document.getElementById('modal-close');
+const cancelBtn= document.getElementById('modal-cancel');
+const toast    = document.getElementById('toast');
+
+document.querySelector('#view-incidencias .btn-primary').addEventListener('click', () => {
+  modalBg.classList.add('open');
+});
+function closeModal() { modalBg.classList.remove('open'); }
+closeBtn.addEventListener('click', closeModal);
+cancelBtn.addEventListener('click', closeModal);
+modalBg.addEventListener('click', e => { if (e.target === modalBg) closeModal(); });
+
+saveBtn.addEventListener('click', () => {
+  saveBtn.classList.add('saved');
+  saveBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> ¡Registrada!';
+  setTimeout(() => {
+    closeModal();
+    saveBtn.classList.remove('saved');
+    saveBtn.innerHTML = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg> Registrar incidencia';
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 3500);
+  }, 900);
+});
+
+// ── View switcher ──
+const navItems = document.querySelectorAll('.nav-item[data-view]');
+const panels   = document.querySelectorAll('.view-panel');
+
+navItems.forEach(item => {
+  item.addEventListener('click', () => {
+    const view = item.dataset.view;
+
+    navItems.forEach(n => n.classList.remove('active'));
+    item.classList.add('active');
+
+    panels.forEach(p => p.classList.remove('active'));
+    document.getElementById('view-' + view).classList.add('active');
+
+    document.getElementById('topbar-title').textContent = item.dataset.title;
+    document.getElementById('topbar-sub').textContent   = item.dataset.sub;
+  });
+});
+
+// ── Gráfico de línea — Facturación ──
+const ctxLine = document.getElementById('chartLine').getContext('2d');
+new Chart(ctxLine, {
+  type: 'line',
+  data: {
+    labels: ['Dic','Ene','Feb','Mar','Abr','May','Jun','Jul','Ago','Sep','Oct','Nov'],
+    datasets: [{
+      label: 'Facturación €',
+      data: [32400, 34200, 31800, 38500, 41200, 39800, 43500, 45200, 42100, 47800, 50200, 48240],
+      borderColor: '#0C71C3',
+      backgroundColor: 'rgba(12,113,195,0.08)',
+      borderWidth: 2.5,
+      pointBackgroundColor: '#0C71C3',
+      pointRadius: 3,
+      pointHoverRadius: 5,
+      fill: true,
+      tension: 0.4
+    }]
+  },
+  options: {
+    responsive: true,
+    plugins: { legend: { display: false } },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { family: 'Montserrat', size: 10 }, color: '#aaa' } },
+      y: {
+        grid: { color: '#F0F4F8' },
+        ticks: {
+          font: { family: 'Montserrat', size: 10 }, color: '#aaa',
+          callback: v => '€' + (v/1000).toFixed(0) + 'k'
+        }
+      }
+    }
+  }
+});
+
+// ── Gráfico donut — Estado ──
+const ctxDonut = document.getElementById('chartDonut').getContext('2d');
+new Chart(ctxDonut, {
+  type: 'doughnut',
+  data: {
+    labels: ['Al día', 'Incidencia', 'Morosidad'],
+    datasets: [{
+      data: [17, 4, 3],
+      backgroundColor: ['#059669','#D97706','#dc2626'],
+      borderWidth: 0,
+      hoverOffset: 6
+    }]
+  },
+  options: {
+    responsive: true,
+    cutout: '68%',
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => ` ${ctx.label}: ${ctx.raw} comunidades` } }
+    }
+  }
+});
+</script>
+</body>
+</html>
