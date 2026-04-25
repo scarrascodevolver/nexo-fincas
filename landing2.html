@@ -461,11 +461,11 @@ vec3 render(vec2 uv) {
         spe=pow(clamp(dot(N(lp-rd),n),.0,1.),21.),
         ao=occ(p,n,.5)*.8*occ(p,n,1.),
         ld=distance(lp,p), atten=1./(1.+ld*.25+ld*ld*.125);
-        vec3 mat=vec3(4,1.6,.6);
-        col+=.08+dif*mat*ao*atten;
-        col+=spe*atten;
+        vec3 mat=vec3(.18,.72,3.6);
+        col+=vec3(.01,.02,.06)+dif*mat*ao*atten;
+        col+=spe*atten*.6;
     }
-    col=mix(vec3(0),col,exp(-125e-5*dd*dd*dd));
+    col=mix(vec3(0.,.008,.024),col,exp(-125e-5*dd*dd*dd));
     col=tanh(col*col);
     col=sqrt(col);
     col=mix(vec3(0),col,min(time*.3,1.));
@@ -503,7 +503,7 @@ function resize(cnv) {
 }
 
 function loop(now) {
-  lerpX += (moveX - lerpX) * 0.04; // suavizado
+  lerpX += (moveX - lerpX) * 0.018; // lerp muy suave = movimiento elegante
   renderer.updateMove([lerpX, 0]);
   renderer.updateMouse([0, 0]);
   renderer.updatePointerCount(0);
@@ -516,7 +516,7 @@ function loop(now) {
 
 /* mueve la cámara según posición X del mouse en pantalla */
 document.addEventListener('mousemove', e => {
-  moveX = (e.clientX / window.innerWidth - 0.5) * window.innerWidth * 0.28;
+  moveX = (e.clientX / window.innerWidth - 0.5) * window.innerWidth * 0.14; // amplitud reducida
 });
 
 window.addEventListener('load', () => {
