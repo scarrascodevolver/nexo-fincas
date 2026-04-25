@@ -69,6 +69,18 @@ a{text-decoration:none;color:inherit;}
     linear-gradient(to bottom,rgba(7,9,15,.55) 0%,transparent 14%,transparent 78%,rgba(7,9,15,.9) 100%);
 }
 
+/* logo de fondo — centrado, semi-opaco */
+.hero-logo-bg{
+  position:absolute;top:60%;right:24%;
+  transform:translateY(-50%);
+  z-index:2;pointer-events:none;
+}
+.hero-logo-bg img{
+  width:220px;height:auto;
+  opacity:0.08;
+  filter:brightness(0) invert(1);
+}
+
 /* contenido centrado a la izquierda */
 .hero-content{
   position:relative;z-index:10;
@@ -285,6 +297,11 @@ a{text-decoration:none;color:inherit;}
 
   <!-- overlay para legibilidad del texto -->
   <div class="hero-overlay"></div>
+
+  <!-- logo centrado al fondo -->
+  <div class="hero-logo-bg">
+    <img src="uploads/logo.png" alt="">
+  </div>
 
   <!-- contenido -->
   <div class="hero-content">
