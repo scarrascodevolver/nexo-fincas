@@ -113,6 +113,29 @@ img, video { display: block; }
 .header-cta .arr { transition: transform 0.2s; }
 .header-cta:hover .arr { transform: translateX(4px); }
 
+.header-central {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 18px;
+  background: linear-gradient(135deg, #96621e, #DE9E55);
+  color: #fff;
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  border-radius: 4px;
+  box-shadow: 0 2px 16px rgba(222,158,85,0.28);
+  transition: all 0.2s;
+}
+.header-central:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 6px 24px rgba(222,158,85,0.48);
+  filter: brightness(1.1);
+}
+.header-central svg { width: 13px; height: 13px; flex-shrink: 0; }
+
 .nav-toggle { display: none; color: #fff; font-size: 22px; padding: 4px; }
 
 /* badge flotante landing v2 */
@@ -1208,6 +1231,13 @@ img, video { display: block; }
       <a href="#nosotros">Nosotros</a>
       <a href="#contacto">Contacto</a>
     </nav>
+    <a href="dashboard-central.html" class="header-central">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M2 20h20M4 20l1.5-7L9 17l3-9 3 9 3.5-4L20 20"/>
+        <circle cx="12" cy="4" r="1.5" fill="currentColor" stroke="none"/>
+      </svg>
+      Central
+    </a>
     <button class="nav-toggle" aria-label="Abrir menú">☰</button>
   </div>
 </header>
