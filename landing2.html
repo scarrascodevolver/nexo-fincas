@@ -77,8 +77,10 @@ a{text-decoration:none;color:inherit;}
 }
 .hero-logo-bg img{
   width:220px;height:auto;
-  opacity:0.32;
+  opacity:0;
+  animation:fadelogo 1.2s 1.4s ease forwards;
 }
+@keyframes fadelogo{to{opacity:0.32;}}
 
 /* contenido centrado a la izquierda */
 .hero-content{
