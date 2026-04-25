@@ -410,7 +410,7 @@ float map(vec3 p) {
     p.y=abs(p.y)-2.5;
     vec2 id=floor(p.xz-s);
     if (mod(id.y,2.)==.0) {
-        p.x-=T*.5;
+        p.x-=T*.18;
         id.x=floor(p.x-s);
     }
     float f=1.-dot(abs(fract(p*42.)-.5)-.25,vec3(1))*.5;
