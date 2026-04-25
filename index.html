@@ -386,6 +386,18 @@ img, video { display: block; }
   color: rgba(255,255,255,0.88);
   border: 1.5px solid rgba(255,255,255,0.36);
 }
+.btn-sound {
+  display: inline-flex; align-items: center; gap: 7px;
+  padding: 13px 18px;
+  background: transparent;
+  color: rgba(255,255,255,0.45);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  border-radius: 6px; cursor: pointer;
+  font-size: 11px; font-weight: 600; letter-spacing: .06em;
+  transition: all 0.25s; white-space: nowrap;
+}
+.btn-sound:hover { border-color: rgba(255,255,255,0.45); color: #fff; }
+.btn-sound svg { width: 14px; height: 14px; flex-shrink: 0; }
 .btn-ghost:hover {
   border-color: rgba(255,255,255,0.82);
   background: rgba(255,255,255,0.07);
@@ -1271,6 +1283,17 @@ img, video { display: block; }
           <a href="deck.html" class="btn btn-ghost">
             Ver presentación <span class="arr">→</span>
           </a>
+          <button class="btn-sound" id="btn-sound" title="Activar sonido">
+            <svg id="sound-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
+            </svg>
+            <svg id="sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
+              <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
+              <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
+            </svg>
+            <span id="sound-label">Sin sonido</span>
+          </button>
         </div>
       </div>
 
@@ -1671,6 +1694,37 @@ img, video { display: block; }
     v2Badge.classList.toggle('visible', e.isIntersecting);
     v2Badge.classList.toggle('hidden',  !e.isIntersecting);
   }, { threshold: 0.1 }).observe(heroSection);
+
+  /* botón sonido: reactiva el video desde el inicio con audio */
+  (function() {
+    const btn     = document.getElementById('btn-sound');
+    const video   = document.querySelector('.hero-video');
+    const iconOff = document.getElementById('sound-icon-off');
+    const iconOn  = document.getElementById('sound-icon-on');
+    const label   = document.getElementById('sound-label');
+    let soundOn = false;
+
+    btn.addEventListener('click', () => {
+      soundOn = !soundOn;
+      if (soundOn) {
+        video.currentTime = 0;
+        video.muted = false;
+        video.play();
+        iconOff.style.display = 'none';
+        iconOn.style.display  = 'block';
+        label.textContent = 'Con sonido';
+        btn.style.color = '#fff';
+        btn.style.borderColor = 'rgba(255,255,255,0.45)';
+      } else {
+        video.muted = true;
+        iconOff.style.display = 'block';
+        iconOn.style.display  = 'none';
+        label.textContent = 'Sin sonido';
+        btn.style.color = '';
+        btn.style.borderColor = '';
+      }
+    });
+  })();
 </script>
 
 </body>

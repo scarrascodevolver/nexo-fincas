@@ -59,28 +59,7 @@ a{text-decoration:none;color:inherit;}
   position:absolute;inset:0;
   width:100%;height:100%;
   display:block;z-index:0;
-  transition:opacity .8s ease;
 }
-
-/* video hero — oculto por defecto, aparece con audio al clicar */
-#hero-video{
-  position:absolute;inset:0;
-  width:100%;height:100%;
-  object-fit:cover;z-index:0;
-  opacity:0;transition:opacity .8s ease;
-  pointer-events:none;
-}
-
-/* botón sonido */
-.btn-sound{
-  display:inline-flex;align-items:center;gap:7px;
-  padding:12px 18px;border:1px solid rgba(255,255,255,.16);
-  color:rgba(255,255,255,.45);font-size:11px;font-weight:600;
-  letter-spacing:.06em;border-radius:5px;cursor:pointer;
-  background:transparent;transition:all .25s;white-space:nowrap;
-}
-.btn-sound:hover{border-color:rgba(255,255,255,.45);color:#fff;}
-.btn-sound svg{width:14px;height:14px;flex-shrink:0;transition:opacity .2s;}
 
 /* overlay: lado izquierdo más oscuro para legibilidad del texto */
 .hero-overlay{
@@ -317,11 +296,6 @@ a{text-decoration:none;color:inherit;}
   <!-- shader WebGL de fondo -->
   <canvas id="canvas"></canvas>
 
-  <!-- video con audio — inactivo por defecto (no autoplay con sonido) -->
-  <video id="hero-video" loop playsinline preload="none">
-    <source src="https://nexofincas.com/wp-content/uploads/2024/12/Videofinal.mp4" type="video/mp4">
-  </video>
-
   <!-- overlay para legibilidad del texto -->
   <div class="hero-overlay"></div>
 
@@ -348,17 +322,6 @@ a{text-decoration:none;color:inherit;}
     <div class="h-btns">
       <a href="dashboard-pro.html" class="btn-p">Ver el sistema →</a>
       <a href="deck.html" class="btn-g">Ver presentación</a>
-      <button class="btn-sound" id="btn-sound" title="Activar sonido">
-        <svg id="sound-icon-off" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-          <line x1="23" y1="9" x2="17" y2="15"/><line x1="17" y1="9" x2="23" y2="15"/>
-        </svg>
-        <svg id="sound-icon-on" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none">
-          <polygon points="11 5 6 9 2 9 2 15 6 15 11 19 11 5"/>
-          <path d="M19.07 4.93a10 10 0 0 1 0 14.14M15.54 8.46a5 5 0 0 1 0 7.07"/>
-        </svg>
-        <span id="sound-label">Sin sonido</span>
-      </button>
     </div>
 
     <div class="h-metrics">
@@ -758,36 +721,6 @@ window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
 
-/* botón sonido: alterna entre canvas WebGL y video con audio */
-(function() {
-  const btn      = document.getElementById('btn-sound');
-  const video    = document.getElementById('hero-video');
-  const canvas   = document.getElementById('canvas');
-  const iconOff  = document.getElementById('sound-icon-off');
-  const iconOn   = document.getElementById('sound-icon-on');
-  const label    = document.getElementById('sound-label');
-  let soundOn = false;
-
-  btn.addEventListener('click', () => {
-    soundOn = !soundOn;
-    if (soundOn) {
-      video.currentTime = 0;
-      video.play();
-      video.style.opacity = '1';
-      canvas.style.opacity = '0';
-      iconOff.style.display = 'none';
-      iconOn.style.display  = 'block';
-      label.textContent = 'Con sonido';
-    } else {
-      video.style.opacity = '0';
-      canvas.style.opacity = '1';
-      iconOff.style.display = 'block';
-      iconOn.style.display  = 'none';
-      label.textContent = 'Sin sonido';
-      setTimeout(() => { video.pause(); video.currentTime = 0; }, 800);
-    }
-  });
-})();
 </script>
 </body>
 </html>
