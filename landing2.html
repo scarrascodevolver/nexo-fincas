@@ -71,7 +71,7 @@ a{text-decoration:none;color:inherit;}
 
 /* logo de fondo — centrado, semi-opaco */
 .hero-logo-bg{
-  position:absolute;top:58.5%;right:30%;
+  position:absolute;top:34%;right:30%;
   transform:translateY(-50%);
   z-index:2;pointer-events:none;
 }
@@ -424,8 +424,8 @@ float box(vec3 p, vec3 s, float r) {
 }
 float map(vec3 p) {
     vec3 q=cos(p*1.8+5e2);
-    float s=sign(p.y);
-    p.y=abs(p.y)-2.5;
+    float s=-1.;
+    p.y=-p.y-2.5;
     vec2 id=floor(p.xz-s);
     if (mod(id.y,2.)==.0) {
         p.x-=T*.18;
@@ -433,7 +433,7 @@ float map(vec3 p) {
     }
     float f=1.-dot(abs(fract(p*42.)-.5)-.25,vec3(1))*.5;
     p.xz=fract(p.xz-s)-.5;
-    return box(p,vec3(.1+.3*rnd(id),2.-.6*rnd(id),.2),f*f*.0125)-1e-3*f;
+    return box(p,vec3(.1+.3*rnd(id),3.2-.6*rnd(id),.2),f*f*.0125)-1e-3*f;
 }
 vec3 norm(vec3 p) {
     float h=1e-3; vec2 k=vec2(-1,1);
@@ -468,9 +468,9 @@ void cam(inout vec3 p) {
 }
 vec3 render(vec2 uv) {
     vec3 col=vec3(0),
-    p=vec3(0,-.3,-23.5-wheel.y/MN-1e2*sin(T*5e-3));
+    p=vec3(0,1.0,-23.5-wheel.y/MN-1e2*sin(T*5e-3));
     cam(p);
-    vec3 rd=dir(uv,p,vec3(0,5.5,0),1.2), lp=p;
+    vec3 rd=dir(uv,p,vec3(0,0.0,0),1.8), lp=p;
     lp.z+=.5;
     float dd;
     if (march(p,rd,dd)) {
