@@ -428,7 +428,7 @@ float map(vec3 p) {
     p.y=-p.y-2.5;
     vec2 id=floor(p.xz-s);
     if (mod(id.y,2.)==.0) {
-        p.x-=T*.18;
+        p.x-=T*.06;
         id.x=floor(p.x-s);
     }
     float f=1.-dot(abs(fract(p*42.)-.5)-.25,vec3(1))*.5;
@@ -521,7 +521,7 @@ function resize(cnv) {
 }
 
 function loop(now) {
-  lerpX += (moveX - lerpX) * 0.018; // lerp muy suave = movimiento elegante
+  lerpX += (moveX - lerpX) * 0.006; // lerp muy suave = movimiento elegante
   renderer.updateMove([lerpX, 0]);
   renderer.updateMouse([0, 0]);
   renderer.updatePointerCount(0);
