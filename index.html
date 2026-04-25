@@ -1690,7 +1690,7 @@ img, video { display: block; }
 
   /* badge v2: aparece a los 2.5s, desaparece al salir del hero */
   const v2Badge = document.getElementById('v2Badge');
-  const heroSection = document.getElementById('hero');
+  const heroSection = document.getElementById('inicio');
   setTimeout(() => { v2Badge.classList.add('visible'); }, 2500);
   new IntersectionObserver(([e]) => {
     v2Badge.classList.toggle('visible', e.isIntersecting);
