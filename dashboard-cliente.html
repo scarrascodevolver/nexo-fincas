@@ -244,10 +244,23 @@ a { text-decoration: none; color: inherit; }
 @media (max-width: 900px) {
   .main-grid { grid-template-columns: 1fr; }
 }
-@media (max-width: 560px) {
-  .topbar { padding: 0 16px; }
+@media (max-width: 640px) {
+  .topbar { padding: 0 16px; height: 60px; }
+  .topbar-label { display: none; }
   .page { padding: 20px 16px; }
-  .balance-meta { flex-wrap: wrap; gap: 16px; }
+  .balance-amount { font-size: 34px; }
+  .balance-meta { flex-wrap: wrap; gap: 14px; }
+  .balance-card { padding: 20px; }
+  .next-receipt { flex-wrap: wrap; gap: 10px; }
+  .receipt-amount { font-size: 18px; }
+  .greeting-title { font-size: 20px; }
+}
+@media (max-width: 380px) {
+  .topbar-brand img { height: 30px; }
+  .topbar-user span { display: none; }
+  .balance-meta { flex-direction: column; gap: 10px; }
+  .balance-meta-item { display: flex; justify-content: space-between; }
+  .balance-meta-label { margin-bottom: 0; }
 }
 </style>
 </head>

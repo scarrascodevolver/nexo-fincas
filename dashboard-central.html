@@ -319,12 +319,76 @@ tbody tr:last-child td { border-bottom:none; }
 .config-toggle.on::after { left:19px; }
 
 /* View section header */
-.view-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; }
+.view-header { display:flex; align-items:center; justify-content:space-between; margin-bottom:22px; flex-wrap:wrap; gap:10px; }
 .view-header h2 { font-size:20px; font-weight:800; color:#1a1a2e; letter-spacing:-0.02em; }
 .view-header p { font-size:12px; color:#aaa; margin-top:3px; }
+
+/* ══ RESPONSIVE ══════════════════════════════ */
+
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.sidebar-overlay.open { display: block; }
+
+.mobile-menu-btn {
+  display: none;
+  background: none; border: none;
+  font-size: 20px; color: #555;
+  cursor: pointer; padding: 6px 8px;
+  border-radius: 6px; line-height: 1;
+  transition: background 0.2s;
+}
+.mobile-menu-btn:hover { background: #F8F3EC; color: #DE9E55; }
+
+@media (max-width: 1100px) {
+  .kpi-grid.cols-5 { grid-template-columns: repeat(3, 1fr); }
+}
+
+@media (max-width: 900px) {
+  .kpi-grid.cols-5 { grid-template-columns: repeat(2, 1fr); }
+  .kpi-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .charts-row.r12, .charts-row.r11 { grid-template-columns: 1fr; }
+  .bottom-row { grid-template-columns: 1fr; }
+  .sede-cards { grid-template-columns: 1fr; }
+  .informe-grid { grid-template-columns: repeat(2, 1fr); }
+  .config-grid { grid-template-columns: 1fr; }
+  .welcome-banner { flex-direction: column; gap: 16px; }
+  .welcome-meta { flex-wrap: wrap; gap: 16px; }
+}
+
+@media (max-width: 768px) {
+  .sidebar {
+    transform: translateX(-240px);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 100;
+  }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 32px rgba(0,0,0,0.35); }
+  .main { margin-left: 0; }
+  .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+  .topbar { padding: 0 16px; }
+  .topbar-date { display: none; }
+  .view-panel { padding: 16px; }
+  .table-card { overflow-x: auto; }
+  .table-card table { min-width: 580px; }
+}
+
+@media (max-width: 560px) {
+  .kpi-grid.cols-5, .kpi-grid.cols-4 { grid-template-columns: repeat(2, 1fr); }
+  .informe-grid { grid-template-columns: 1fr; }
+  .sede-card-grid { grid-template-columns: repeat(2, 1fr); }
+  .topbar-badge { display: none; }
+  .topbar-title { font-size: 15px; }
+}
 </style>
 </head>
 <body>
+
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- ══ SIDEBAR ══════════════════════════════ -->
 <aside class="sidebar">
@@ -389,6 +453,7 @@ tbody tr:last-child td { border-bottom:none; }
 <main class="main">
   <div class="topbar">
     <div class="topbar-left">
+      <button class="mobile-menu-btn" id="menuToggle" aria-label="Abrir menú">☰</button>
       <a href="index.html" class="back-link">
         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"/></svg>
         Volver
@@ -763,6 +828,28 @@ tbody tr:last-child td { border-bottom:none; }
 
   /* Init charts del resumen al cargar */
   initCharts('resumen');
+
+  /* ── Mobile sidebar toggle ── */
+  const menuToggle = document.getElementById('menuToggle');
+  const sidebar    = document.querySelector('.sidebar');
+  const overlay    = document.getElementById('sidebarOverlay');
+
+  menuToggle.addEventListener('click', () => {
+    sidebar.classList.toggle('open');
+    overlay.classList.toggle('open');
+  });
+  overlay.addEventListener('click', () => {
+    sidebar.classList.remove('open');
+    overlay.classList.remove('open');
+  });
+  document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+    item.addEventListener('click', () => {
+      if (window.innerWidth <= 768) {
+        sidebar.classList.remove('open');
+        overlay.classList.remove('open');
+      }
+    });
+  });
 </script>
 </body>
 </html>

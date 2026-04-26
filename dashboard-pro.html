@@ -403,9 +403,102 @@ textarea.form-control { resize: none; line-height: 1.5; }
 }
 .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
 .toast-dot { width: 8px; height: 8px; border-radius: 50%; background: #059669; }
+
+/* ══ RESPONSIVE ══════════════════════════════ */
+
+/* Overlay para sidebar en móvil */
+.sidebar-overlay {
+  display: none;
+  position: fixed; inset: 0;
+  background: rgba(0,0,0,0.5);
+  z-index: 99;
+  backdrop-filter: blur(2px);
+  -webkit-backdrop-filter: blur(2px);
+}
+.sidebar-overlay.open { display: block; }
+
+/* Botón hamburguesa */
+.mobile-menu-btn {
+  display: none;
+  background: none; border: none;
+  font-size: 20px; color: #555;
+  cursor: pointer; padding: 6px 8px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  line-height: 1;
+}
+.mobile-menu-btn:hover { background: #F0F4F8; }
+
+@media (max-width: 900px) {
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); }
+  .charts-row { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 768px) {
+  /* Sidebar como drawer */
+  .sidebar {
+    transform: translateX(-240px);
+    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    z-index: 100;
+  }
+  .sidebar.open { transform: translateX(0); box-shadow: 4px 0 32px rgba(0,0,0,0.35); }
+
+  /* Main ocupa todo el ancho */
+  .main { margin-left: 0; }
+
+  /* Topbar */
+  .topbar { padding: 0 16px; }
+  .topbar-date { display: none; }
+  .topbar-badge { display: none; }
+  .mobile-menu-btn { display: flex; align-items: center; justify-content: center; }
+
+  /* Panels */
+  .view-panel { padding: 16px; }
+
+  /* KPI */
+  .kpi-grid { grid-template-columns: repeat(2, 1fr); gap: 12px; }
+
+  /* Charts */
+  .charts-row { grid-template-columns: 1fr; }
+
+  /* Tablas: scroll horizontal */
+  .table-card { overflow-x: auto; }
+  .table-card table { min-width: 640px; }
+
+  /* Filtros */
+  .filter-bar { flex-direction: column; gap: 12px; }
+  .filter-group { min-width: unset; width: 100%; }
+  .recipients-badge { width: 100%; justify-content: center; }
+}
+
+@media (max-width: 480px) {
+  .kpi-grid { grid-template-columns: 1fr; }
+  .kpi-value { font-size: 22px; }
+
+  /* Modales */
+  .modal-box, .compose-box { width: 96vw; }
+  .compose-head { padding: 16px 18px 12px; }
+  .compose-body { padding: 14px 18px; }
+  .compose-foot {
+    padding: 12px 18px 20px;
+    flex-direction: column; align-items: stretch; gap: 10px;
+  }
+  .compose-note { text-align: center; }
+  .modal-head { padding: 18px 18px 14px; }
+  .modal-body { padding: 14px 18px; }
+  .modal-foot { padding: 12px 18px 20px; flex-wrap: wrap; }
+  .form-row { grid-template-columns: 1fr; }
+
+  /* Topbar */
+  .topbar-title { font-size: 15px; }
+  .back-link span { display: none; }
+}
 </style>
 </head>
 <body>
+
+<!-- Overlay móvil sidebar -->
+<div class="sidebar-overlay" id="sidebarOverlay"></div>
 
 <!-- SIDEBAR -->
 <aside class="sidebar">
@@ -466,9 +559,12 @@ textarea.form-control { resize: none; line-height: 1.5; }
 <!-- MAIN -->
 <main class="main">
   <div class="topbar">
-    <div style="display:flex;align-items:baseline;gap:8px;">
-      <span class="topbar-title" id="topbar-title">Dashboard</span>
-      <span class="topbar-sub" id="topbar-sub">Resumen general · Noviembre 2026</span>
+    <div style="display:flex;align-items:center;gap:12px;">
+      <button class="mobile-menu-btn" id="menuToggle" aria-label="Abrir menú">☰</button>
+      <div style="display:flex;align-items:baseline;gap:8px;">
+        <span class="topbar-title" id="topbar-title">Dashboard</span>
+        <span class="topbar-sub" id="topbar-sub">Resumen general · Noviembre 2026</span>
+      </div>
     </div>
     <div class="topbar-right">
       <span class="topbar-date">Delegación A Coruña</span>
@@ -1097,6 +1193,28 @@ new Chart(ctxLine, {
       }
     }
   }
+});
+
+// ── Mobile sidebar toggle ──
+const menuToggle = document.getElementById('menuToggle');
+const sidebar    = document.querySelector('.sidebar');
+const overlay    = document.getElementById('sidebarOverlay');
+
+menuToggle.addEventListener('click', () => {
+  sidebar.classList.toggle('open');
+  overlay.classList.toggle('open');
+});
+overlay.addEventListener('click', () => {
+  sidebar.classList.remove('open');
+  overlay.classList.remove('open');
+});
+document.querySelectorAll('.nav-item[data-view]').forEach(item => {
+  item.addEventListener('click', () => {
+    if (window.innerWidth <= 768) {
+      sidebar.classList.remove('open');
+      overlay.classList.remove('open');
+    }
+  });
 });
 
 // ── Gráfico donut — Estado ──
