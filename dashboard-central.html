@@ -362,14 +362,15 @@ tbody tr:last-child td { border-bottom:none; }
 }
 
 @media (max-width: 768px) {
+  html { overflow-x: hidden; }
   body { overflow-x: hidden; }
 
   .sidebar {
-    transform: translateX(-240px);
-    transition: transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+    left: -240px;
+    transition: left 0.3s cubic-bezier(0.22, 1, 0.36, 1);
     z-index: 100;
   }
-  .sidebar.open { transform: translateX(0); box-shadow: 6px 0 40px rgba(0,0,0,0.4); }
+  .sidebar.open { left: 0; box-shadow: 6px 0 40px rgba(0,0,0,0.4); }
 
   .main { margin-left: 0; max-width: 100vw; overflow-x: hidden; }
   .mobile-menu-btn { display: flex; }
