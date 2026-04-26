@@ -272,6 +272,121 @@ a{text-decoration:none;color:inherit;}
 .f-links{display:flex;gap:22px;}
 .f-links a{font-size:10.5px;font-weight:500;color:rgba(255,255,255,.2);transition:color .2s;}
 .f-links a:hover{color:rgba(255,255,255,.75);}
+
+/* ════════════════════════════════
+   NAV MÓVIL
+════════════════════════════════ */
+.nav-toggle{
+  display:none;background:none;border:none;
+  color:rgba(255,255,255,.65);font-size:22px;
+  cursor:pointer;padding:4px 8px;line-height:1;
+}
+.mob-nav{
+  display:none;position:fixed;inset:0;z-index:400;
+}
+.mob-nav.open{display:flex;}
+.mob-nav-bg{
+  position:absolute;inset:0;
+  background:rgba(0,0,0,.65);
+  backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);
+}
+.mob-nav-panel{
+  position:absolute;top:0;right:0;bottom:0;width:260px;
+  background:#07090f;
+  border-left:1px solid rgba(255,255,255,.07);
+  display:flex;flex-direction:column;padding:28px 22px;
+  transform:translateX(100%);
+  transition:transform .3s cubic-bezier(.22,1,.36,1);
+}
+.mob-nav.open .mob-nav-panel{transform:translateX(0);}
+.mob-nav-close{
+  align-self:flex-end;background:none;border:none;
+  color:rgba(255,255,255,.35);font-size:22px;cursor:pointer;
+  margin-bottom:24px;line-height:1;transition:color .2s;
+}
+.mob-nav-close:hover{color:#fff;}
+.mob-nav-links{display:flex;flex-direction:column;gap:2px;}
+.mob-nav-links a{
+  color:rgba(255,255,255,.55);font-size:13px;font-weight:600;
+  letter-spacing:.06em;padding:12px 12px;border-radius:8px;
+  transition:background .2s,color .2s;
+}
+.mob-nav-links a:hover{background:rgba(255,255,255,.06);color:#fff;}
+.mob-nav-divider{height:1px;background:rgba(255,255,255,.07);margin:14px 0;}
+.mob-nav-cta{
+  display:inline-flex;align-items:center;gap:7px;
+  padding:11px 18px;background:#0C71C3;color:#fff;
+  font-size:11px;font-weight:700;letter-spacing:.05em;border-radius:5px;
+}
+
+/* ════════════════════════════════
+   RESPONSIVE
+════════════════════════════════ */
+@media(max-width:1024px){
+  .nav{padding:0 36px;}
+  .hero{padding:88px 48px 72px;}
+  .section{padding:88px 48px;}
+  .cta-sec{padding:100px 48px;}
+  .site-footer{padding:24px 48px;}
+}
+
+@media(max-width:900px){
+  .mod-grid{grid-template-columns:repeat(2,1fr);}
+  .portals-grid{grid-template-columns:1fr;}
+  .section{padding:72px 36px;}
+  .hero{padding:88px 36px 64px;}
+}
+
+@media(max-width:768px){
+  /* nav */
+  .nav{padding:0 22px;height:64px;}
+  .nav-inner{gap:16px;}
+  .nav-logo img{height:48px;}
+  .nav-links{display:none;}
+  .nav-cta{display:none;}
+  .nav-toggle{display:block;}
+
+  /* hero */
+  .hero{padding:90px 22px 60px;}
+  .hero-content{max-width:100%;}
+  .h-metrics{gap:18px;flex-wrap:wrap;padding-top:20px;margin-top:28px;}
+  .h-met-n{font-size:18px;}
+  .scroll-hint{left:22px;bottom:24px;}
+  .hero-logo-bg{display:none;}
+
+  /* sections */
+  .section{padding:60px 22px;}
+  .s-inner{max-width:100%;}
+  .s-desc{max-width:100%;}
+
+  /* modules */
+  .mod-card{padding:20px 18px;}
+  .mod-n{font-size:12px;}
+  .mod-d{font-size:10.5px;}
+
+  /* portals */
+  .p-card{padding:28px 24px;}
+  .p-title{font-size:20px;}
+  .p-desc{max-width:100%;}
+
+  /* cta */
+  .cta-sec{padding:72px 22px;}
+  .cta-title{font-size:clamp(22px,5vw,36px);}
+  .cta-sub{max-width:100%;}
+
+  /* footer */
+  .site-footer{padding:22px 22px;flex-direction:column;align-items:flex-start;gap:16px;}
+  .f-links{flex-wrap:wrap;gap:14px;}
+}
+
+@media(max-width:520px){
+  .mod-grid{grid-template-columns:1fr;}
+  .h-btns{flex-direction:column;}
+  .btn-p,.btn-g{justify-content:center;padding:13px 20px;}
+  .h-title{font-size:clamp(20px,6vw,28px);}
+  .h-sub{font-size:12px;}
+  .h-metrics{gap:12px;}
+}
 </style>
 </head>
 <body>
@@ -287,8 +402,25 @@ a{text-decoration:none;color:inherit;}
       <a href="kiosco.html">Kiosco</a>
     </div>
     <a href="dashboard-pro.html" class="nav-cta">Entrar al sistema →</a>
+    <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">☰</button>
   </div>
 </nav>
+
+<!-- Menú móvil -->
+<div class="mob-nav" id="mobNav">
+  <div class="mob-nav-bg" id="mobNavBg"></div>
+  <div class="mob-nav-panel">
+    <button class="mob-nav-close" id="mobNavClose">✕</button>
+    <div class="mob-nav-links">
+      <a href="#modulos">Módulos</a>
+      <a href="#portales">Portales</a>
+      <a href="deck.html">Presentación</a>
+      <a href="kiosco.html">Kiosco</a>
+    </div>
+    <div class="mob-nav-divider"></div>
+    <a href="dashboard-pro.html" class="mob-nav-cta">Entrar al sistema →</a>
+  </div>
+</div>
 
 <!-- ══ HERO ══ -->
 <section class="hero" id="hero">
@@ -720,6 +852,25 @@ const nav = document.getElementById('mainNav');
 window.addEventListener('scroll', () => {
   nav.classList.toggle('scrolled', window.scrollY > 40);
 }, { passive: true });
+
+/* ── Mobile nav ── */
+const mobNav   = document.getElementById('mobNav');
+const mobClose = document.getElementById('mobNavClose');
+const mobBg    = document.getElementById('mobNavBg');
+
+document.getElementById('navToggle').addEventListener('click', () => {
+  mobNav.classList.add('open');
+  document.body.style.overflow = 'hidden';
+});
+function closeMobNav() {
+  mobNav.classList.remove('open');
+  document.body.style.overflow = '';
+}
+mobClose.addEventListener('click', closeMobNav);
+mobBg.addEventListener('click', closeMobNav);
+document.querySelectorAll('.mob-nav-links a, .mob-nav-cta').forEach(a => {
+  a.addEventListener('click', closeMobNav);
+});
 
 </script>
 </body>
