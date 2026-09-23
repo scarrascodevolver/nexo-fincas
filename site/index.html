@@ -1364,6 +1364,18 @@ img, video { display: block; }
 .why-list li::before { content: ""; position: absolute; left: 0; top: 9px; width: 8px; height: 2px; background: #2EA3F2; }
 .why-list b { color: #0C1828; font-weight: 600; }
 
+/* ══ PLATAFORMA PARA PROPIETARIOS ═══════════ */
+.owner-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 32px; }
+.owner-item { display: flex; flex-direction: column; gap: 12px; }
+.owner-icon { width: 52px; height: 52px; border-radius: 14px; background: #fff; color: #0C71C3; display: flex; align-items: center; justify-content: center; box-shadow: 0 2px 12px rgba(12,113,195,0.12); }
+.owner-icon svg { width: 24px; height: 24px; }
+.owner-title { font-size: 17px; font-weight: 700; color: #0C1828; }
+.owner-text { font-size: 14px; line-height: 1.65; color: #556; }
+.owner-note { margin-top: 48px; display: flex; gap: 12px 32px; flex-wrap: wrap; font-size: 12.5px; font-weight: 600; color: #0C71C3; }
+.owner-note span::before { content: "•"; margin-right: 8px; color: #DE9E55; }
+@media (max-width: 1024px) { .owner-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 600px) { .owner-grid { grid-template-columns: 1fr; } }
+
 /* ══ FRANQUICIA ═════════════════════════════ */
 .franchise-section { background: #0C1828; color: #fff; }
 .franchise-section .s-eyebrow { color: #DE9E55; }
@@ -1473,10 +1485,6 @@ img, video { display: block; }
       <a href="#normativa">Normativa al día</a>
       <a href="#contacto">Contacto</a>
     </nav>
-    <a href="https://erp.nexofincas.com/admin" class="header-central">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-      Acceso profesional
-    </a>
     <button class="nav-toggle" id="navToggle" aria-label="Abrir menú">☰</button>
   </div>
 </header>
@@ -1552,18 +1560,18 @@ img, video { display: block; }
   <div class="hero-body">
     <div class="hero-main">
       <div class="hero-left">
-        <div class="hero-eyebrow">Tu socio estratégico</div>
+        <div class="hero-eyebrow">Administración de fincas</div>
         <h1 class="hero-title">
-          La franquicia de referencia<br>
-          en administración<br>
-          de <em>fincas</em>.
+          Tu comunidad,<br>
+          bien administrada.<br>
+          Atención <em>24 horas</em>, 365 días.
         </h1>
         <p class="hero-subtitle">
-          Gestión especializada de comunidades de propietarios con una plataforma tecnológica propia, única en el mercado. Atención 24 horas, 365 días al año.
+          Somos la franquicia de referencia en España en gestión de comunidades de propietarios. Asesoría legal, técnica y económica con un único interlocutor.
         </p>
         <div class="hero-actions">
           <a href="#contacto" class="btn btn-primary">
-            Solicitar información <span class="arr">→</span>
+            Solicitar presupuesto <span class="arr">→</span>
           </a>
           <a href="#franquicia" class="btn btn-ghost">
             Ser franquiciado <span class="arr">→</span>
@@ -1683,97 +1691,42 @@ img, video { display: block; }
   </div>
 </section>
 
-<!-- ══ PLATAFORMA — FLUJO ══════════════════ -->
+<!-- ══ PLATAFORMA — PARA PROPIETARIOS ══════ -->
 <section class="section flow-section" id="plataforma">
   <div class="section-inner">
     <div class="s-eyebrow reveal">Plataforma tecnológica propia</div>
     <div class="s-rule reveal reveal-delay-1"></div>
-    <h2 class="s-title reveal reveal-delay-1">Del edificio al propietario.<br><span style="color:#2EA3F2">Sin fricción.</span></h2>
+    <h2 class="s-title reveal reveal-delay-1">Tu comunidad,<br><span style="color:#2EA3F2">siempre a mano.</span></h2>
     <p class="s-subtitle reveal reveal-delay-2">
-      Un portal profesional que centraliza comunidades, propietarios, contabilidad, cobros e incidencias, con seguimiento en tiempo real de cada delegación.
+      Contamos con una plataforma tecnológica avanzada, única en el mercado, diseñada para aportar un valor diferencial tanto a profesionales como a clientes. Todo lo de tu comunidad, en tu móvil.
     </p>
 
-    <div class="flow-diagram" id="flowDiagram">
-      <div class="flow-node">
-        <div class="node-circle c1"><div class="node-ping"></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9.5L12 3l9 6.5V20a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1V9.5z"/><path d="M9 21V12h6v9"/></svg>
-        </div>
-        <div class="node-label">Comunidades</div><div class="node-sub">La base</div>
+    <div class="owner-grid">
+      <div class="owner-item reveal">
+        <div class="owner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></div>
+        <div class="owner-title">Recibos y pagos al día</div>
+        <div class="owner-text">Consulta tus cuotas, descarga recibos y sabe en todo momento cómo están las cuentas de tu comunidad.</div>
       </div>
-      <div class="flow-connector"><div class="connector-track"></div><div class="connector-fill"></div><div class="connector-dot"></div></div>
-      <div class="flow-node">
-        <div class="node-circle c2"><div class="node-ping"></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>
-        </div>
-        <div class="node-label">Propietarios</div><div class="node-sub">Tu cartera</div>
+      <div class="owner-item reveal reveal-delay-1">
+        <div class="owner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>
+        <div class="owner-title">Actas y documentos</div>
+        <div class="owner-text">Estatutos, actas, seguros y contratos ordenados por comunidad, disponibles cuando los necesites.</div>
       </div>
-      <div class="flow-connector"><div class="connector-track"></div><div class="connector-fill"></div><div class="connector-dot"></div></div>
-      <div class="flow-node">
-        <div class="node-circle c3"><div class="node-ping"></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
-        </div>
-        <div class="node-label">Contabilidad</div><div class="node-sub">El motor</div>
+      <div class="owner-item reveal reveal-delay-2">
+        <div class="owner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>
+        <div class="owner-title">Incidencias con seguimiento</div>
+        <div class="owner-text">Comunica una avería y sigue su estado en tiempo real, con registro continuo y trazabilidad completa.</div>
       </div>
-      <div class="flow-connector"><div class="connector-track"></div><div class="connector-fill"></div><div class="connector-dot"></div></div>
-      <div class="flow-node">
-        <div class="node-circle c4"><div class="node-ping"></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg>
-        </div>
-        <div class="node-label">Cobros</div><div class="node-sub">Sin mora</div>
-      </div>
-      <div class="flow-connector"><div class="connector-track"></div><div class="connector-fill"></div><div class="connector-dot"></div></div>
-      <div class="flow-node">
-        <div class="node-circle c5"><div class="node-ping"></div>
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="2" width="14" height="20" rx="2"/><path d="M12 18h.01"/></svg>
-        </div>
-        <div class="node-label">Portal</div><div class="node-sub">En el bolsillo</div>
+      <div class="owner-item reveal reveal-delay-3">
+        <div class="owner-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>
+        <div class="owner-title">Comunicados y avisos</div>
+        <div class="owner-text">Convocatorias, avisos urgentes y novedades de tu comunidad, sin depender del tablón del portal.</div>
       </div>
     </div>
 
-    <div class="flow-badge" id="flowBadge">
-      <div class="flow-badge-pill">Auditorías e incidencias con trazabilidad completa</div>
-    </div>
-  </div>
-</section>
-
-<!-- ══ PLATAFORMA — PORTALES ═══════════════ -->
-<section class="section portals-section" id="portales">
-  <div class="section-inner">
-    <div class="s-eyebrow reveal">Accesos</div>
-    <div class="s-rule reveal reveal-delay-1"></div>
-    <h2 class="s-title reveal reveal-delay-1">Dos portales.<br><span style="color:#2EA3F2">Una sola plataforma.</span></h2>
-    <p class="s-subtitle reveal reveal-delay-2">Cada usuario accede a lo que necesita, desde cualquier dispositivo.</p>
-
-    <div class="portals-grid">
-      <div class="p-card pro reveal-left">
-        <div class="p-card-header">
-          <div class="p-card-badge">Franquiciados · Administradores</div>
-          <div class="p-card-title">Área Profesional</div>
-          <div class="p-card-sub">Control total de la cartera</div>
-        </div>
-        <div class="p-features">
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7" rx="1"/><rect x="14" y="3" width="7" height="7" rx="1"/><rect x="3" y="14" width="7" height="7" rx="1"/><rect x="14" y="14" width="7" height="7" rx="1"/></svg></div>Cartera de comunidades</div>
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>Documentación por comunidad</div>
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="3" width="20" height="18" rx="2"/><path d="M7 8h10M7 12h10M7 16h6"/></svg></div>Contabilidad y cobros</div>
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>Auditorías e incidencias</div>
-        </div>
-        <a href="https://erp.nexofincas.com/admin" class="p-cta">Entrar al área profesional <span class="arr">→</span></a>
-      </div>
-
-      <div class="p-card cli reveal-right">
-        <div class="p-card-header">
-          <div class="p-card-badge">Propietarios · Vecinos</div>
-          <div class="p-card-title">Área Cliente</div>
-          <div class="p-card-sub">Tu comunidad en el bolsillo</div>
-        </div>
-        <div class="p-features">
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2"/><path d="M1 10h22"/></svg></div>Recibos y pagos</div>
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg></div>Documentos y actas</div>
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg></div>Incidencias en tiempo real</div>
-          <div class="p-feature"><div class="p-feature-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg></div>Comunicados y avisos</div>
-        </div>
-        <a href="#contacto" class="p-cta">Próximamente · Solicita tus claves <span class="arr">→</span></a>
-      </div>
+    <div class="owner-note reveal">
+      <span>Área Profesional para franquiciados y administradores, ya disponible.</span>
+      <span>Área Cliente para propietarios, próximamente.</span>
     </div>
   </div>
 </section>
@@ -1966,30 +1919,6 @@ img, video { display: block; }
     entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('visible'); observer.unobserve(e.target); } });
   }, { threshold: 0.12 });
   document.querySelectorAll('.reveal, .reveal-left, .reveal-right').forEach(el => observer.observe(el));
-
-  const cardsObserver = new IntersectionObserver((entries) => {
-    entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('animated'); cardsObserver.unobserve(e.target); } });
-  }, { threshold: 0.3 });
-  document.querySelectorAll('.p-card').forEach(el => cardsObserver.observe(el));
-
-  // ── Flow diagram ──
-  const flowDiagram = document.getElementById('flowDiagram');
-  const flowNodes = [...flowDiagram.querySelectorAll('.flow-node')];
-  const flowConnectors = [...flowDiagram.querySelectorAll('.flow-connector')];
-  const flowBadge = document.getElementById('flowBadge');
-  function triggerFlow() {
-    flowNodes.forEach((node, i) => {
-      setTimeout(() => {
-        node.classList.add('active');
-        if (flowConnectors[i]) setTimeout(() => flowConnectors[i].classList.add('active'), 220);
-        if (i === flowNodes.length - 1) setTimeout(() => flowBadge.classList.add('active'), 500);
-      }, i * 420);
-    });
-  }
-  const flowObserver = new IntersectionObserver((entries) => {
-    if (entries[0].isIntersecting) { triggerFlow(); flowObserver.unobserve(flowDiagram); }
-  }, { threshold: 0.25 });
-  flowObserver.observe(flowDiagram);
 
   // ── Sonido del vídeo ──
   (function () {
