@@ -1297,6 +1297,32 @@ img, video { display: block; }
 .soon { display:inline-block; font-size:10px; font-weight:700; opacity:.75; letter-spacing:.1em; text-transform:uppercase; margin-left:8px; padding:2px 8px; border:1px solid rgba(255,255,255,.35); border-radius:999px; vertical-align:middle; }
 @media (max-width: 600px) { .soon { display:block; margin:6px 0 0; width:max-content; } }
 
+/* ══ Botón de sonido: pulso hasta la primera pulsación ══ */
+.btn-sound { position: relative; overflow: visible; }
+.btn-sound:not(.seen)::before {
+  content: ""; position: absolute; inset: -4px; border-radius: 50%;
+  border: 2px solid rgba(46,163,242,0.9);
+  animation: sound-pulse 1.8s ease-out infinite;
+  pointer-events: none;
+}
+.btn-sound:not(.seen)::after {
+  content: "Activar sonido"; position: absolute; left: calc(100% + 12px); top: 50%; transform: translateY(-50%);
+  white-space: nowrap; font-size: 11px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  color: rgba(255,255,255,0.85); background: rgba(12,24,40,0.7); border: 1px solid rgba(255,255,255,0.18);
+  padding: 6px 10px; border-radius: 999px; backdrop-filter: blur(6px);
+  animation: sound-hint 1.8s ease-in-out infinite; pointer-events: none;
+}
+@keyframes sound-pulse {
+  0%   { transform: scale(1); opacity: 0.9; }
+  70%  { transform: scale(1.9); opacity: 0; }
+  100% { transform: scale(1.9); opacity: 0; }
+}
+@keyframes sound-hint {
+  0%, 100% { opacity: 0.75; transform: translateY(-50%) translateX(0); }
+  50%      { opacity: 1; transform: translateY(-50%) translateX(3px); }
+}
+@media (prefers-reduced-motion: reduce) { .btn-sound:not(.seen)::before { animation: none; opacity: 0.6; } .btn-sound:not(.seen)::after { animation: none; } }
+
 /* ══ SERVICIOS ══════════════════════════════ */
 .services-section { background: #fff; }
 .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -1959,6 +1985,7 @@ img, video { display: block; }
     const iconOn = document.getElementById('sound-icon-on');
     let soundOn = false;
     btn.addEventListener('click', () => {
+      btn.classList.add('seen'); // deja de pulsar en cuanto el usuario lo toca
       soundOn = !soundOn;
       if (soundOn) {
         video.currentTime = 0; video.volume = 1; video.muted = false;
