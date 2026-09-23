@@ -1459,6 +1459,10 @@ html, body { overflow-x: clip; }
 
 /* ══ FOOTER ═════════════════════════════════ */
 .site-footer { background: #071019; color: rgba(255,255,255,0.55); padding: 44px 0 100px; }
+.footer-seal { justify-content: flex-start; align-items: center; gap: 20px; padding-bottom: 32px; margin-bottom: 32px; border-bottom: 1px solid rgba(255,255,255,0.08); }
+.seal-label { font-size: 11px; font-weight: 700; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.45); }
+.seal-link { display: inline-block; background: #fff; border-radius: 10px; padding: 8px 14px; line-height: 0; }
+.seal-link img { height: 64px; width: auto; }
 .footer-inner { max-width: 1400px; margin: 0 auto; padding: 0 64px; display: flex; align-items: center; justify-content: space-between; gap: 24px; flex-wrap: wrap; }
 .footer-brand img { height: 44px; width: auto; opacity: 0.9; }
 .footer-links { display: flex; gap: 24px; flex-wrap: wrap; }
@@ -1877,6 +1881,12 @@ html, body { overflow-x: clip; }
 </section>
 
 <footer class="site-footer">
+  <div class="footer-inner footer-seal">
+    <div class="seal-label">Miembro de</div>
+    <a href="https://aeca.es" target="_blank" rel="noopener" class="seal-link" title="Asociación Española de Contabilidad y Administración de Empresas">
+      <img src="assets/aeca.png" alt="Miembro de la Asociación Española de Contabilidad y Administración de Empresas (AECA), declarada de utilidad pública" width="352" height="159">
+    </a>
+  </div>
   <div class="footer-inner">
     <div class="footer-brand"><img src="assets/logo.png" alt="Nexo Fincas"></div>
     <nav class="footer-links" aria-label="Enlaces legales">
