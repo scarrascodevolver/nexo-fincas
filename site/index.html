@@ -1332,6 +1332,19 @@ img, video { display: block; }
 @media (max-width: 1180px) { .main-nav { display: none; } .header-central { margin-left: auto; } .nav-toggle { display: block; } }
 .works-box { scroll-margin-top: 24px; }
 
+/* ══ Hero en móvil: crece con su contenido y deja sitio a la barra inferior fija ══ */
+@media (max-width: 860px) {
+  .hero { height: auto; min-height: 100svh; }
+  .hero-main { padding-top: 28px; padding-bottom: 112px; }
+}
+@media (max-width: 600px) {
+  .portal-tile { padding: 12px 18px; }
+  .portal-tile-name { font-size: 15px; }
+  .hero-eyebrow { margin-bottom: 10px; }
+  .hero-title { margin-bottom: 14px; }
+  .hero-subtitle { font-size: 13.5px; line-height: 1.55; margin-bottom: 22px; }
+}
+
 /* ══ Sin scroll horizontal en móvil: las animaciones laterales (.reveal-left/right) quedan recortadas por su sección ══ */
 html, body { overflow-x: clip; }
 .section, .law-strip, .parallax-break, .site-footer { overflow-x: clip; }
