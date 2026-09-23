@@ -1454,6 +1454,7 @@ html, body { overflow-x: clip; }
 .form-note { font-size: 12.5px; color: rgba(255,255,255,0.5); }
 .form-ok { display: none; padding: 14px 16px; border-radius: 8px; background: rgba(46,163,242,0.12); border: 1px solid rgba(46,163,242,0.4); color: #fff; font-size: 13.5px; line-height: 1.55; }
 .form-ok.show { display: block; }
+.hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
 .contact-item-val a:hover { color: #2EA3F2; }
 
 /* ══ FOOTER ═════════════════════════════════ */
@@ -1853,7 +1854,7 @@ html, body { overflow-x: clip; }
         </div>
       </div>
 
-      <form class="contact-form reveal-right" id="contactForm" novalidate>
+      <form class="contact-form reveal-right" id="contactForm" method="post" action="https://erp.nexofincas.com/web/contact">
         <div class="contact-form-title">Solicitar información</div>
         <div class="contact-form-sub">Cuéntanos qué necesitas y te llamamos. También atendemos consultas sobre la franquicia.</div>
         <div class="form-row">
@@ -1862,12 +1863,14 @@ html, body { overflow-x: clip; }
         </div>
         <div class="field"><label for="f-email">Email</label><input id="f-email" name="email" type="email" required autocomplete="email" placeholder="tu@correo.com"></div>
         <div class="field"><label for="f-msg">Consulta</label><textarea id="f-msg" name="message" required placeholder="¿En qué podemos ayudarte?"></textarea></div>
-        <label class="form-consent"><input id="f-consent" type="checkbox" required> <span>He leído y acepto la <a href="privacidad.html">política de privacidad</a>.</span></label>
+        <label class="form-consent"><input id="f-consent" name="consent" type="checkbox" value="1" required> <span>He leído y acepto la <a href="privacidad.html">política de privacidad</a>.</span></label>
+        <div class="hp" aria-hidden="true"><label for="f-website">Sitio web</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Enviar consulta <span class="arr">→</span></button>
           <span class="form-note">Respondemos el mismo día laborable.</span>
         </div>
-        <div class="form-ok" id="formOk">Se ha abierto tu programa de correo con la consulta preparada. Si no se abre, escríbenos a <b>administracion@nexofincas.com</b> o llama al <b>+34 632 12 49 63</b>.</div>
+        <div class="form-ok" id="formOk">Consulta enviada. Te contactaremos en breve. Si es urgente, llama al <b>+34 632 12 49 63</b>.</div>
+        <div class="form-ok" id="formError">No se ha podido enviar la consulta. Escríbenos a <b>administracion@nexofincas.com</b> o llama al <b>+34 632 12 49 63</b>.</div>
       </form>
     </div>
   </div>
@@ -1958,20 +1961,17 @@ html, body { overflow-x: clip; }
     });
   })();
 
-  // ── Formulario de contacto: abre el correo con la consulta preparada ──
-  // (Cuando el ERP tenga correo configurado, este envío pasará a registrarse allí.)
-  const form = document.getElementById('contactForm');
-  form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    if (!form.reportValidity()) return;
-    const v = (id) => document.getElementById(id).value.trim();
-    const subject = encodeURIComponent('Consulta desde nexofincas.com · ' + v('f-name'));
-    const body = encodeURIComponent(
-      'Nombre: ' + v('f-name') + '\nTeléfono: ' + v('f-phone') + '\nEmail: ' + v('f-email') + '\n\nConsulta:\n' + v('f-msg')
-    );
-    window.location.href = 'mailto:administracion@nexofincas.com?subject=' + subject + '&body=' + body;
+  // ── Formulario de contacto: lo recibe el ERP y devuelve aquí con ?enviado=1 ──
+  const params = new URLSearchParams(location.search);
+  if (params.get('enviado') === '1') {
     document.getElementById('formOk').classList.add('show');
-  });
+  } else if (params.has('error')) {
+    document.getElementById('formError').classList.add('show');
+  }
+  if (params.has('enviado') || params.has('error')) {
+    document.getElementById('contacto').scrollIntoView();
+    history.replaceState(null, '', location.pathname + '#contacto');
+  }
 </script>
 
 </body>
