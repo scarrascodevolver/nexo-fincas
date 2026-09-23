@@ -1332,6 +1332,10 @@ img, video { display: block; }
 @media (max-width: 1180px) { .main-nav { display: none; } .header-central { margin-left: auto; } .nav-toggle { display: block; } }
 .works-box { scroll-margin-top: 24px; }
 
+/* ══ Sin scroll horizontal en móvil: las animaciones laterales (.reveal-left/right) quedan recortadas por su sección ══ */
+html, body { overflow-x: clip; }
+.section, .law-strip, .parallax-break, .site-footer { overflow-x: clip; }
+
 /* ══ SERVICIOS ══════════════════════════════ */
 .services-section { background: #fff; }
 .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
