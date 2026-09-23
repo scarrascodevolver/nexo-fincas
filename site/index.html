@@ -1323,6 +1323,15 @@ img, video { display: block; }
 }
 @media (prefers-reduced-motion: reduce) { .btn-sound:not(.seen)::before { animation: none; opacity: 0.6; } .btn-sound:not(.seen)::after { animation: none; } }
 
+.header-inner { gap: 28px; }
+.main-nav { gap: 26px; min-width: 0; }
+.main-nav a { font-size: 10.5px; letter-spacing: 0.12em; white-space: nowrap; }
+.header-central { white-space: nowrap; }
+@media (max-width: 1400px) { .site-header { padding: 0 32px; } .main-nav { gap: 18px; } .main-nav a { font-size: 10px; letter-spacing: 0.08em; } }
+/* Con siete entradas, el menú pasa al cajón lateral antes que en la landing original. */
+@media (max-width: 1180px) { .main-nav { display: none; } .header-central { margin-left: auto; } .nav-toggle { display: block; } }
+.works-box { scroll-margin-top: 24px; }
+
 /* ══ SERVICIOS ══════════════════════════════ */
 .services-section { background: #fff; }
 .services-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
@@ -1456,10 +1465,12 @@ img, video { display: block; }
       <img src="assets/logo.png" alt="Nexo Fincas">
     </a>
     <nav class="main-nav" aria-label="Navegación principal">
-      <a href="#inicio">Inicio</a>
-      <a href="#servicios">Servicios</a>
+      <a href="#porque">Ventajas</a>
+      <a href="#servicios">Somos administradores</a>
       <a href="#plataforma">Plataforma</a>
-      <a href="#franquicia">Franquicia</a>
+      <a href="#franquicia">Trabaja con nosotros</a>
+      <a href="#experiencias">Dpto. de experiencias</a>
+      <a href="#normativa">Normativa al día</a>
       <a href="#contacto">Contacto</a>
     </nav>
     <a href="https://erp.nexofincas.com/admin" class="header-central">
@@ -1477,9 +1488,12 @@ img, video { display: block; }
     <button class="mobile-nav-close" id="mobileNavClose" aria-label="Cerrar menú">✕</button>
     <div class="mobile-nav-links">
       <a href="#inicio" class="mobile-nav-link">Inicio</a>
-      <a href="#servicios" class="mobile-nav-link">Servicios</a>
+      <a href="#porque" class="mobile-nav-link">Ventajas</a>
+      <a href="#servicios" class="mobile-nav-link">Somos administradores</a>
       <a href="#plataforma" class="mobile-nav-link">Plataforma</a>
-      <a href="#franquicia" class="mobile-nav-link">Franquicia</a>
+      <a href="#franquicia" class="mobile-nav-link">Trabaja con nosotros</a>
+      <a href="#experiencias" class="mobile-nav-link">Departamento de experiencias</a>
+      <a href="#normativa" class="mobile-nav-link">Normativa al día</a>
       <a href="#contacto" class="mobile-nav-link">Contacto</a>
     </div>
     <div class="mobile-nav-divider"></div>
@@ -1572,7 +1586,7 @@ img, video { display: block; }
 <!-- ══ SERVICIOS ═══════════════════════════ -->
 <section class="section services-section" id="servicios">
   <div class="section-inner">
-    <div class="s-eyebrow reveal">Servicios</div>
+    <div class="s-eyebrow reveal">Somos administradores</div>
     <div class="s-rule reveal reveal-delay-1"></div>
     <h2 class="s-title reveal reveal-delay-1">Un servicio integral<br><span style="color:#2EA3F2">para tu comunidad.</span></h2>
     <p class="s-subtitle reveal reveal-delay-2">Legal, técnico y económico. Todo lo que necesita una comunidad de propietarios, con un único interlocutor.</p>
@@ -1605,7 +1619,7 @@ img, video { display: block; }
 <!-- ══ POR QUÉ NEXO ════════════════════════ -->
 <section class="section why-section" id="porque">
   <div class="section-inner">
-    <div class="s-eyebrow reveal">Por qué Nexo Fincas</div>
+    <div class="s-eyebrow reveal">Ventajas de Nexo Fincas</div>
     <div class="s-rule reveal reveal-delay-1"></div>
     <h2 class="s-title reveal reveal-delay-1">Expertos en gestión de fincas<br><span style="color:#2EA3F2">para optimizar tu presupuesto.</span></h2>
     <p class="s-subtitle reveal reveal-delay-2">Una arquitectura flexible y escalable, adaptada a las necesidades del franquiciado y del cliente final.</p>
@@ -1800,7 +1814,7 @@ img, video { display: block; }
       </div>
     </div>
 
-    <div class="works-box reveal">
+    <div class="works-box reveal" id="experiencias">
       <div>
         <div class="works-label">Departamento de obras · Área de experiencias</div>
         <h3 class="works-title">Adaptamos tu local u oficina a este modelo de negocio.</h3>
@@ -1818,7 +1832,7 @@ img, video { display: block; }
 </section>
 
 <!-- ══ NORMATIVA AL DÍA ════════════════════ -->
-<div class="law-strip" id="normativa">
+<div class="law-strip" id="normativa" style="scroll-margin-top:24px">
   <div class="law-inner">
     <div class="law-icon"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v18M3 7h18M5 7l-3 7a4 4 0 0 0 6 0L5 7zM19 7l-3 7a4 4 0 0 0 6 0l-3-7z"/></svg></div>
     <div>
