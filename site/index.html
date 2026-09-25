@@ -1519,6 +1519,8 @@ html, body { overflow-x: clip; }
 .form-ok { display: none; padding: 14px 16px; border-radius: 8px; background: rgba(46,163,242,0.12); border: 1px solid rgba(46,163,242,0.4); color: #fff; font-size: 13.5px; line-height: 1.55; }
 .form-ok.show { display: block; }
 .hp { position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden; }
+.turnstile { margin: 4px 0 12px; min-height: 0; }
+.cf-turnstile { margin: 4px 0 12px; }
 .contact-item-val a:hover { color: #2EA3F2; }
 .contact-item-icon--wa { background: rgba(37,211,102,0.14); color: #25D366; }
 .map-link { display: inline-block; margin-left: 10px; font-size: 12px; font-weight: 700; letter-spacing: 0.04em; color: #2EA3F2; }
@@ -1954,6 +1956,7 @@ html, body { overflow-x: clip; }
         <div class="field"><label for="f-msg">Consulta</label><textarea id="f-msg" name="message" required placeholder="¿En qué podemos ayudarte?"></textarea></div>
         <label class="form-consent"><input id="f-consent" name="consent" type="checkbox" value="1" required> <span>He leído y acepto la <a href="privacidad.html">política de privacidad</a>.</span></label>
         <div class="hp" aria-hidden="true"><label for="f-website">Sitio web</label><input id="f-website" name="website" type="text" tabindex="-1" autocomplete="off"></div>
+        <div id="turnstile" class="turnstile"></div>
         <div class="form-actions">
           <button type="submit" class="btn btn-primary">Enviar consulta <span class="arr">→</span></button>
           <span class="form-note">Respondemos el mismo día laborable.</span>
@@ -2049,6 +2052,20 @@ html, body { overflow-x: clip; }
       }
     });
   })();
+
+  // ── Cloudflare Turnstile (anti-spam). Con la clave vacía no se carga nada; el ERP tampoco lo exige. ──
+  const TURNSTILE_SITE_KEY = '';
+  if (TURNSTILE_SITE_KEY) {
+    const box = document.getElementById('turnstile');
+    box.className = 'cf-turnstile';
+    box.dataset.sitekey = TURNSTILE_SITE_KEY;
+    box.dataset.language = 'es';
+    box.dataset.theme = 'light';
+    const s = document.createElement('script');
+    s.src = 'https://challenges.cloudflare.com/turnstile/v0/api.js';
+    s.async = true; s.defer = true;
+    document.head.appendChild(s);
+  }
 
   // ── Formulario de contacto: lo recibe el ERP y devuelve aquí con ?enviado=1 ──
   const params = new URLSearchParams(location.search);
